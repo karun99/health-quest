@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Health Quest — learn to spot the healthiest food. Transparent Health Scores, no timers, no pressure, no tracking.">
+<title>Health Quest — Find the Healthiest Food</title>
+<style>
+  :root{
+    --bg:#f4faf3;
+    --surface:#ffffff;
+    --ink:#15251b;
+    --ink-soft:#52645a;
+    --primary:#2f8f5b;
+    --primary-dark:#1e6b41;
+    --primary-soft:#e3f4e8;
+    --accent:#f59e0b;
+    --accent-soft:#fdf1da;
+    --good:#2f8f5b;
+    --mid:#e8a13c;
+    --low:#d64545;
+    --line:#dce9e0;
+    --radius:16px;
+    --shadow:0 10px 30px rgba(30,80,50,.10);
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--font);
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--primary-dark)}
+  button{font-family:inherit;cursor:pointer}
+  :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+
+  /* ---------- Skip link ---------- */
+  .skip-link{
+    position:absolute;left:-999px;top:8px;z-index:100;
+    background:var(--primary-dark);color:#fff;padding:10px 16px;border-radius:10px;text-decoration:none;
+  }
+  .skip-link:focus{left:8px}
+
+  /* ---------- Ethics banner ---------- */
+  .ethics-banner{
+    background:linear-gradient(135deg,#1e6b41,#2f8f5b);
+    color:#fff;padding:14px 18px;
+  }
+  .ethics-inner{max-width:960px;margin:0 auto;display:flex;gap:14px;align-items:flex-start}
+  .ethics-inner .shield{font-size:1.6rem;line-height:1;flex:none}
+  .ethics-inner .text strong{display:block;font-size:.98rem}
+  .ethics-inner .text p{font-size:.86rem;opacity:.94;margin-top:3px;max-width:70ch}
+  .ethics-actions{margin-left:auto;display:flex;gap:8px;flex:none}
+  .ethics-actions button{
+    background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.4);
+    padding:6px 12px;border-radius:999px;font-size:.8rem;font-weight:600;
+  }
+  .ethics-actions button:hover{background:rgba(255,255,255,.28)}
+
+  /* ---------- Header ---------- */
+  header{
+    background:var(--surface);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:50;
+  }
+  .header-inner{
+    max-width:960px;margin:0 auto;padding:10px 18px;
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  }
+  .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+  .logo .mark{
+    width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--primary),#4caf7c);
+    display:grid;place-items:center;font-size:1.3rem;flex:none;box-shadow:0 4px 12px rgba(31,111,72,.35);
+  }
+  .logo .name{font-weight:800;font-size:1.05rem;letter-spacing:-.02em}
+  .logo .tag{font-size:.72rem;color:var(--ink-soft);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+  nav.header-nav{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap}
+  nav.header-nav button{
+    background:transparent;border:1px solid var(--line);color:var(--ink-soft);
+    padding:8px 14px;border-radius:999px;font-size:.86rem;font-weight:600;
+  }
+  nav.header-nav button:hover{border-color:var(--primary);color:var(--primary-dark)}
+  nav.header-nav button.active{background:var(--primary);border-color:var(--primary);color:#fff}
+
+  /* ---------- Layout ---------- */
+  main{max-width:960px;margin:0 auto;padding:22px 18px 80px}
+  section.view{display:none}
+  section.view.active{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:20px;
+  }
+  .h-stack{display:flex;gap:10px;align-items:center}
+  .grid{display:grid;gap:14px}
+  .grid.auto{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+
+  .badge{
+    display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;
+    font-size:.72rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+  }
+  .badge.everyday{background:var(--primary-soft);color:var(--primary-dark)}
+  .badge.sometimes{background:var(--accent-soft);color:#96650c}
+  .badge.treat{background:#fdeaea;color:#a83232}
+
+  h1{font-size:1.7rem;line-height:1.2;letter-spacing:-.02em}
+  h2{font-size:1.25rem;letter-spacing:-.01em}
+  .lead{color:var(--ink-soft);font-size:.98rem}
+  .muted{color:var(--ink-soft)}
+
+  /* ---------- Buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    border:none;border-radius:12px;padding:11px 18px;font-weight:700;font-size:.92rem;
+    transition:transform .12s ease, box-shadow .12s ease;
+  }
+  .btn:active{transform:scale(.97)}
+  .btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 16px rgba(31,111,72,.28)}
+  .btn-primary:hover{background:var(--primary-dark)}
+  .btn-soft{background:var(--primary-soft);color:var(--primary-dark)}
+  .btn-soft:hover{background:#d4ecdc}
+  .btn-ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink);}
+  .btn-ghost:hover{border-color:var(--primary);color:var(--primary-dark)}
+  .btn-accent{background:var(--accent);color:#3c2a05}
+  .btn-block{width:100%}
+  .btn[disabled]{opacity:.55;cursor:not-allowed}
+
+  .chip{
+    border:1.5px solid var(--line);background:var(--surface);border-radius:999px;
+    padding:7px 14px;font-weight:700;font-size:.85rem;color:var(--ink-soft);
+  }
+  .chip.active{background:var(--primary-soft);border-color:var(--primary);color:var(--primary-dark)}
+  .chip-row{display:flex;gap:8px;flex-wrap:wrap}
+
+  /* ---------- Food cards ---------- */
+  .food-card{position:relative;overflow:hidden}
+  .food-emoji{font-size:2.4rem;display:inline-block;transition:transform .2s ease}
+  .food-card:hover .food-emoji{transform:scale(1.12)}
+  .food-name{font-weight:800;font-size:1.05rem;margin-top:2px}
+  .food-desc{font-size:.84rem;color:var(--ink-soft);margin-top:4px}
+  .score-pill{
+    display:inline-flex;align-items:center;gap:6px;margin-top:10px;
+    background:var(--primary-soft);border-radius:999px;padding:5px 12px;
+    font-weight:800;color:var(--primary-dark);font-size:.9rem;
+  }
+  .score-pill.low{background:#fdeaea;color:#a83232}
+  .score-pill.mid{background:var(--accent-soft);color:#96650c}
+
+  .level-card{
+    text-align:left;display:flex;flex-direction:column;gap:8px;
+    background:var(--surface);border:2px solid var(--line);border-radius:var(--radius);
+    padding:18px;transition:border-color .15s ease, transform .15s ease;
+  }
+  .level-card:hover{border-color:var(--primary);transform:translateY(-2px)}
+  .level-icon{font-size:1.9rem}
+  .level-card h3{font-size:1.02rem}
+  .level-card p{font-size:.84rem;color:var(--ink-soft)}
+
+  /* ---------- Health Score breakdown ---------- */
+  .scale-row{display:grid;grid-template-columns:130px 1fr 56px;gap:10px;align-items:center;margin:9px 0}
+  .scale-row .label{font-size:.8rem;font-weight:600;color:var(--ink-soft)}
+  .scale-row .val{font-weight:800;font-size:.84rem;text-align:right}
+  .bar{height:10px;border-radius:999px;background:#e8efe9;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:999px;background:var(--primary);transition:width .6s ease}
+  .bar i.mid{background:var(--mid)}
+  .bar i.low{background:var(--low)}
+  .big-score{display:flex;align-items:center;gap:16px}
+  .big-num{
+    width:76px;height:76px;border-radius:22px;flex:none;display:grid;place-items:center;
+    background:var(--primary-soft);color:var(--primary-dark);font-size:1.9rem;font-weight:800;
+  }
+  .big-num.mid{background:var(--accent-soft);color:#96650c}
+  .big-num.low{background:#fdeaea;color:#a83232}
+
+  .divider{height:1px;background:var(--line);margin:14px 0}
+  .hint-box{
+    background:var(--accent-soft);border-left:4px solid var(--accent);
+    border-radius:8px;padding:12px 14px;font-size:.9rem;
+  }
+
+  /* ---------- Answer feedback ---------- */
+  .verdict{
+    border-radius:var(--radius);padding:16px;font-weight:800;font-size:1.05rem;
+  }
+  .verdict.right{background:var(--primary-soft);color:var(--primary-dark)}
+  .verdict.forgiving{background:var(--accent-soft);color:#7a5208}
+
+  /* ---------- Locate ---------- */
+  .loc-status{
+    display:none;border-radius:12px;padding:12px 14px;font-size:.9rem;margin-top:12px;
+  }
+  .loc-status.show{display:block;animation:fade .25s ease}
+  .loc-status.success{background:var(--primary-soft);color:var(--primary-dark)}
+  .loc-status.warn{background:var(--accent-soft);color:#7a5208}
+  .loc-status.error{background:#fdeaea;color:#a83232}
+  .venue-row{
+    display:grid;grid-template-columns:44px 1fr auto;gap:12px;align-items:start;
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:14px;margin-top:10px;
+  }
+  .venue-emoji{font-size:1.6rem;display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:var(--primary-soft)}
+  .venue-name{font-weight:800;font-size:.95rem}
+  .venue-meta{font-size:.78rem;color:var(--ink-soft);margin-top:2px}
+  .venue-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+  .venue-tags span{font-size:.68rem;font-weight:700;background:#eef2ef;padding:3px 8px;border-radius:999px}
+  .venue-more{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+  .venue-more button{font-size:.75rem;padding:5px 10px;border-radius:999px}
+  .venue-rating{font-weight:800;font-size:.95rem;text-align:right}
+
+  /* ---------- Forms / modal ---------- */
+  .field{margin:12px 0}
+  .field label{display:block;font-size:.82rem;font-weight:700;margin-bottom:5px;color:var(--ink-soft)}
+  .input, .select, .textarea{
+    width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:12px;
+    font-size:.95rem;font-family:inherit;background:var(--surface);color:var(--ink);
+  }
+  .input:focus,.select:focus,.textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(47,143,91,.15)}
+  .modal-backdrop{
+    position:fixed;inset:0;background:rgba(15,30,22,.5);display:none;z-index:90;
+    align-items:flex-end;justify-content:center;
+  }
+  @media(min-width:560px){.modal-backdrop{align-items:center}}
+  .modal-backdrop.open{display:flex;animation:fade .2s ease}
+  .modal{
+    background:var(--surface);border-radius:22px 22px 0 0;max-width:520px;width:100%;
+    padding:22px;max-height:88vh;overflow:auto;animation:slideUp .25s ease;
+  }
+  @media(min-width:560px){.modal{border-radius:22px}}
+  @keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+  .modal h3{font-size:1.15rem;margin-bottom:4px}
+  .modal-close{float:right;background:none;border:none;font-size:1.3rem;color:var(--ink-soft)}
+
+  .key-hint{font-size:.78rem;color:var(--ink-soft);margin-top:5px}
+  .privacy-lock{display:flex;gap:8px;align-items:center;font-size:.8rem;color:var(--ink-soft);margin-top:14px}
+
+  /* ---------- Home ---------- */
+  .hero{
+    background:linear-gradient(135deg,#1e6b41,#3aa569);border-radius:22px;color:#fff;
+    padding:26px;position:relative;overflow:hidden;
+  }
+  .hero h1{font-size:1.9rem}
+  .hero p{margin-top:8px;max-width:52ch;opacity:.94;font-size:.97rem}
+  .hero-emoji{font-size:3rem;position:absolute;right:22px;bottom:18px;opacity:.9}
+  .pillars{display:grid;gap:12px;margin-top:14px}
+  @media(min-width:720px){.pillars{grid-template-columns:repeat(3,1fr)}}
+  .pillar{background:#fff;border-radius:14px;padding:14px;color:var(--ink)}
+  .pillar .ic{font-size:1.5rem}
+  .pillar h4{font-size:.95rem;margin:6px 0 2px}
+  .pillar p{font-size:.8rem;color:var(--ink-soft)}
+  .steps{display:grid;gap:10px;margin-top:6px}
+  .step{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+  .step .n{width:28px;height:28px;flex:none;border-radius:9px;background:var(--primary-soft);color:var(--primary-dark);display:grid;place-items:center;font-weight:800}
+  .step b{font-size:.92rem}
+  .step span{font-size:.84rem;color:var(--ink-soft);display:block}
+
+  /* ---------- Explainers ---------- */
+  .faq-item{border:1px solid var(--line);border-radius:14px;background:var(--surface);margin-top:10px;overflow:hidden}
+  .faq-q{width:100%;text-align:left;background:none;border:none;padding:14px 16px;font-weight:700;font-size:.95rem;display:flex;justify-content:space-between;gap:10px;align-items:center}
+  .faq-q .chev{transition:transform .2s;color:var(--ink-soft)}
+  .faq-item.open .chev{transform:rotate(180deg)}
+  .faq-a{display:none;padding:0 16px 14px;font-size:.88rem;color:var(--ink-soft)}
+  .faq-item.open .faq-a{display:block}
+
+  table{width:100%;border-collapse:collapse;font-size:.86rem}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}
+  th{font-size:.76rem;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-soft)}
+  .table-scroll{overflow-x:auto}
+
+  footer{border-top:1px solid var(--line);background:var(--surface);padding:22px 18px;text-align:center;font-size:.8rem;color:var(--ink-soft)}
+  footer a{font-weight:600}
+
+  .toast{
+    position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(80px);
+    background:var(--ink);color:#fff;padding:12px 18px;border-radius:999px;font-size:.88rem;font-weight:600;
+    z-index:120;opacity:0;transition:all .25s ease;box-shadow:0 8px 24px rgba(0,0,0,.25);pointer-events:none;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+  .skeleton{background:linear-gradient(90deg,#e8efe9 25%,#f3f8f4 45%,#e8efe9 65%);background-size:200% 100%;animation:shimmer 1.2s infinite;border-radius:12px}
+  @keyframes shimmer{to{background-position:-200% 0}}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<div class="ethics-banner" id="ethicsBanner" role="region" aria-label="Safety promise">
+  <div class="ethics-inner">
+    <span class="shield" aria-hidden="true">🛡️</span>
+    <div class="text">
+      <strong>Our Safety Promise</strong>
+      <p>No timers. No streaks. No pressure. No tracking. We never collect your location or data — and we will never ask you to "go somewhere" or link your score to your real identity. You learn by <em>understanding</em>, not by fear.</p>
+    </div>
+    <div class="ethics-actions">
+      <button type="button" onclick="document.getElementById('whyModal').classList.add('open');document.body.style.overflow='hidden'">Why</button>
+      <button type="button" onclick="this.closest('.ethics-banner').style.display='none'">Got it ✓</button>
+    </div>
+  </div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="#home" onclick="switchView('home')">
+      <span class="mark" aria-hidden="true">🥗</span>
+      <span>
+        <span class="name">Health Quest</span><br>
+        <span class="tag">v3.1 · Class 8–12</span>
+      </span>
+    </a>
+    <nav class="header-nav" aria-label="Main">
+      <button data-view="home" class="active" onclick="switchView('home')">Home</button>
+      <button data-view="play" onclick="switchView('play')">Play</button>
+      <button data-view="browse" onclick="switchView('browse')">Food Lab</button>
+      <button data-view="locate" onclick="switchView('locate')">Locate Nearby</button>
+      <button data-view="about" onclick="switchView('about')">How it works</button>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- ============================ HOME ============================ -->
+  <section class="view active" id="view-home" aria-label="Home">
+    <div class="hero">
+      <h1>Can you spot the healthiest meal? 🍽️</h1>
+      <p>Every answer is explained with a transparent, Michelin-style <strong>Health Score</strong> — so you learn <em>why</em>, not just <em>what</em>. Built for students like you, because food knowledge is life power.</p>
+      <span class="hero-emoji" aria-hidden="true">🚀</span>
+    </div>
+
+    <div class="pillars">
+      <div class="pillar"><div class="ic" aria-hidden="true">🔍</div><h4>Radical transparency</h4><p>Every food carries a visible score with the reasons behind it. No hidden points.</p></div>
+      <div class="pillar"><div class="ic" aria-hidden="true">🧠</div><h4>No pressure learning</h4><p>No timers, no streaks, no leaderboards with names. Wrong answers teach you more.</p></div>
+      <div class="pillar"><div class="ic" aria-hidden="true">🌍</div><h4>Real local data</h4><p>"Locate Nearby" finds real eateries near you from OpenStreetMap — with honest ratings.</p></div>
+    </div>
+
+    <h2 style="margin:26px 0 12px">How to play</h2>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><div><b>Pick a cuisine level</b><span>South Indian, North Indian, Indian favourites or International.</span></div></div>
+      <div class="step"><div class="n">2</div><div><b>Compare two foods</b><span>Tap the one you think is healthier. There is no time limit — take your moment.</span></div></div>
+      <div class="step"><div class="n">3</div><div><b>Read the "why"</b><span>See the score breakdown and the science behind every rating. That's the real win.</span></div></div>
+    </div>
+
+    <div class="h-stack" style="margin-top:22px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="switchView('play')">Start playing →</button>
+      <button class="btn btn-ghost" onclick="switchView('locate')">📍 Locate eateries near you</button>
+    </div>
+  </section>
+
+  <!-- ============================ PLAY ============================ -->
+  <section class="view" id="view-play" aria-label="Play">
+    <div class="h-stack" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <div>
+        <h1 style="font-size:1.5rem">Choose your level</h1>
+        <p class="lead">Pick a cuisine, then compare two foods.</p>
+      </div>
+      <button class="btn btn-accent" id="hintBtn" onclick="openKeys()">💡 Get AI hints</button>
+    </div>
+
+    <div class="chip-row" id="levelChips" style="margin:16px 0"></div>
+
+    <div class="grid auto" id="levelGrid"></div>
+
+    <div id="roundArea" class="card" style="margin-top:18px;display:none">
+      <div class="h-stack" style="justify-content:space-between">
+        <h2 id="roundTitle">Head-to-head</h2>
+        <button class="btn btn-ghost" onclick="startRound()">↻ New pair</button>
+      </div>
+      <p class="muted" id="roundSub" style="margin-top:4px"></p>
+      <div class="grid auto" id="roundCards" style="margin-top:14px"></div>
+      <button class="btn btn-soft" id="roundHint" style="margin-top:14px;display:none" onclick="roundHint()">💡 Hint (no penalty)</button>
+    </div>
+
+    <div id="verdictArea" style="display:none"></div>
+  </section>
+
+  <!-- ============================ FOOD LAB ============================ -->
+  <section class="view" id="view-browse" aria-label="Food Lab">
+    <div class="h-stack" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <div>
+        <h1 style="font-size:1.5rem">Food Lab</h1>
+        <p class="lead">Explore every food in the database with its full score card.</p>
+      </div>
+      <div class="h-stack">
+        <button class="btn btn-soft" onclick="exportMarkdown()">⬇️ Export .md</button>
+        <button class="btn btn-ghost" onclick="importMarkdown()">⬆️ Import .md</button>
+      </div>
+    </div>
+    <input id="foodSearch" class="input" type="search" placeholder="Search foods…" style="margin:16px 0 0" oninput="renderBrowse()" aria-label="Search foods">
+    <div class="grid auto" id="browseGrid" style="margin-top:14px"></div>
+  </section>
+
+  <!-- ============================ LOCATE ============================ -->
+  <section class="view" id="view-locate" aria-label="Locate Nearby">
+    <h1 style="font-size:1.5rem">Locate real eateries near you</h1>
+    <p class="lead">Truthful, criteria-based ratings of real places from OpenStreetMap. Your location is sent once — only to find places — and never stored or tracked.</p>
+
+    <div class="card" style="margin-top:16px">
+      <h2>How do you want to search?</h2>
+      <p class="muted" style="margin-top:4px">Privacy first: choose what feels safe for you. Use one — it's your choice.</p>
+
+      <div class="field">
+        <label for="pincodeInput">Indian PIN code (or city name)</label>
+        <div class="h-stack">
+          <input id="pincodeInput" class="input" type="text" placeholder="e.g. 500034" inputmode="numeric" aria-label="PIN code or city">
+          <button class="btn btn-primary" id="pincodeBtn" onclick="locateByPincode()">Search</button>
+        </div>
+      </div>
+
+      <div class="divider" style="margin:8px 0"></div>
+
+      <button class="btn btn-soft btn-block" id="gpsBtn" onclick="useLocation()">📍 Use my location (a single, one-time lookup)</button>
+
+      <div id="locStatus" class="loc-status" role="status" aria-live="polite"></div>
+    </div>
+
+    <div class="h-stack" style="margin-top:16px">
+      <h2 style="font-size:1.05rem" id="venueCount"></h2>
+      <button class="btn btn-ghost" id="whyRatingBtn" style="display:none" onclick="showRatingFormula()">ℹ️ How ratings work</button>
+    </div>
+    <div id="venueList"></div>
+  </section>
+
+  <!-- ============================ ABOUT ============================ -->
+  <section class="view" id="view-about" aria-label="How it works">
+    <h1 style="font-size:1.5rem">How does the Health Quest score work?</h1>
+    <p class="lead">Inspired by the Michelin Guide, which earns trust by publishing its criteria. We do the same — every point is explained, nothing hidden.</p>
+
+    <div class="card" style="margin-top:16px">
+      <h2>The formula — 5 honest criteria</h2>
+      <div class="scale-row"><span class="label">🧬 Nutrition</span><div class="bar"><i style="width:30%"></i></div><span class="val">30 pts</span></div>
+      <div class="scale-row"><span class="label">🌾 Whole-food factor</span><div class="bar"><i style="width:25%"></i></div><span class="val">25 pts</span></div>
+      <div class="scale-row"><span class="label">🧂 Sugar &amp; salt</span><div class="bar"><i style="width:20%"></i></div><span class="val">20 pts</span></div>
+      <div class="scale-row"><span class="label">🥑 Healthy fats</span><div class="bar"><i style="width:15%"></i></div><span class="val">15 pts</span></div>
+      <div class="scale-row"><span class="label">⚖️ Balance &amp; portion</span><div class="bar"><i style="width:10%"></i></div><span class="val">10 pts</span></div>
+      <p class="muted" style="margin-top:8px">Total = <strong>Health Score out of 100</strong>. The fuller the bar, the healthier the food for a student’s growing body.</p>
+    </div>
+
+    <h2 style="margin-top:24px">Safety by design</h2>
+    <div class="grid auto">
+      <div class="card"><b>🛡️ What we learned</b><p class="muted" style="margin-top:4px;font-size:.88rem">From Pokémon Go, we saw location games can cause real harm. From Blue Whale, we saw manipulative mechanics hurt kids. From Michelin, we learned trust comes from transparency.</p></div>
+      <div class="card"><b>🧩 What we built</b><p class="muted" style="margin-top:4px;font-size:.88rem">Consent-first flow, a pincode alternative, no timers, no streaks, no "you must go", and every rating explains itself.</p></div>
+    </div>
+
+    <h2 style="margin-top:24px">FAQ</h2>
+    <div id="faqList"></div>
+
+    <div class="card" style="margin-top:24px">
+      <b>⚙️ Engineered to IEEE standards</b>
+      <p class="muted" style="margin-top:4px;font-size:.88rem">This project is aligned with IEEE 7000 (ethics-by-design), IEEE 29148 (requirements), IEEE 12207 (life-cycle), IEEE 1012 (verification) and IEEE 730 (quality) — with a full mapping in the <a href="explainer-ieee.html">IEEE configuration brief</a>.</p>
+      <p class="muted" style="margin-top:8px;font-size:.86rem">© 2026 K Subramanya Satyanarayana · St. John's English Medium School · <strong>MIT License</strong></p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p><strong>Health Quest</strong> — made for the PanIIT Andhra Pradesh Social Innovation Ideathon, 2026. No backend · no database · no tracking · costs ₹0 to run forever.</p>
+  <p style="margin-top:6px"><a href="#" onclick="openKeys()">🔑 Bring Your Own AI Key</a> · <a href="#" onclick="switchView('about')">How it works</a> · <a href="explainer-ieee.html">⚙️ IEEE configuration</a></p>
+  <p style="margin-top:8px;font-size:.76rem;color:#7d8f84">© 2026 K Subramanya Satyanarayana · St. John's English Medium School · MIT License · <a href="explainer.html">Explainer</a> · <a href="presenter.html">Presenter deck</a></p>
+</footer>
+
+<!-- ================= KEYS MODAL ================= -->
+<div class="modal-backdrop" id="keysModal" role="dialog" aria-modal="true" aria-label="AI key settings">
+  <div class="modal">
+    <button class="modal-close" aria-label="Close" onclick="closeModal('keysModal')">✕</button>
+    <h3>🔑 Bring Your Own Key (optional)</h3>
+    <p class="muted" style="font-size:.88rem">Add a free AI key if you want smarter hints. It is stored only in <strong>your browser</strong> (localStorage) — never sent to our server (there is none!). No key? No problem — smart offline hints are built in.</p>
+
+    <div class="field">
+      <label for="openrouterKey">OpenRouter API key</label>
+      <input id="openrouterKey" class="input" type="password" placeholder="sk-or-…" autocomplete="off" oninput="livePreviewKeys()">
+      <p class="key-hint">Free plan at <strong>openrouter.ai</strong>. Works with thousands of models.</p>
+    </div>
+    <div class="field">
+      <label for="nvidiaKey">NVIDIA NIM API key</label>
+      <input id="nvidiaKey" class="input" type="password" placeholder="nvapi-…" autocomplete="off" oninput="livePreviewKeys()">
+      <p class="key-hint">Free credits at <strong>build.nvidia.com</strong>.</p>
+    </div>
+
+    <div class="h-stack">
+      <button class="btn btn-primary" onclick="saveKeys()">Save keys</button>
+      <button class="btn btn-ghost" onclick="clearKeys()">Clear</button>
+    </div>
+    <div class="privacy-lock">🔒 Keys never leave this browser. Clearing browser data removes them.</div>
+  </div>
+</div>
+
+<!-- ================= WHY ETHICS MODAL ================= -->
+<div class="modal-backdrop" id="whyModal" role="dialog" aria-modal="true" aria-label="Why the safety promise">
+  <div class="modal">
+    <button class="modal-close" aria-label="Close" onclick="closeModal('whyModal')">✕</button>
+    <h3>🛡️ Why this promise exists</h3>
+    <p class="muted" style="margin-top:4px;font-size:.9rem">Health Quest was designed after studying three famous case studies.</p>
+    <div class="grid" style="margin-top:14px">
+      <div class="card"><b>Pokémon Go (2016)</b><p class="muted" style="font-size:.86rem;margin-top:3px">Location games caused real-world harm and trespassing. <strong>Our fix:</strong> consent-first flow, a pincode alternative, and a single one-time lookup.</p></div>
+      <div class="card"><b>Blue Whale challenge</b><p class="muted" style="font-size:.86rem;margin-top:3px">Manipulative mechanics targeted vulnerable teens. <strong>Our fix:</strong> no timers, no streaks, no "you must go". A wrong answer is a lesson, not a loss.</p></div>
+      <div class="card"><b>Michelin Guide</b><p class="muted" style="font-size:.86rem;margin-top:3px">Its trust comes from published criteria. <strong>Our fix:</strong> a visible Health Score with a "Why this rating" button on everything.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= RATING FORMULA MODAL ================= -->
+<div class="modal-backdrop" id="ratingModal" role="dialog" aria-modal="true" aria-label="Venue rating formula">
+  <div class="modal">
+    <button class="modal-close" aria-label="Close" onclick="closeModal('ratingModal')">✕</button>
+    <h3>🏆 How venue ratings work (transparent)</h3>
+    <p class="muted" style="margin-top:4px;font-size:.9rem">Every eatery score is built from 4 visible criteria — just like the food scores.</p>
+    <div class="scale-row"><span class="label">🍽️ Eatery type</span><div class="bar"><i style="width:20%"></i></div><span class="val">20 pts</span></div>
+    <div class="scale-row"><span class="label">🚶 Near-enough</span><div class="bar"><i style="width:30%"></i></div><span class="val">30 pts</span></div>
+    <div class="scale-row"><span class="label">🥬 Healthful options</span><div class="bar"><i style="width:20%"></i></div><span class="val">20 pts</span></div>
+    <div class="scale-row"><span class="label">🗓️ Honest info</span><div class="bar"><i style="width:30%"></i></div><span class="val">30 pts</span></div>
+    <p class="muted" style="margin-top:8px;font-size:.84rem">Restaurants earn more for type; fast-food earns less. Places advertising vegetarian, vegan or organic dishes earn healthful-option points. Places with opening hours, a phone number and a website earn honesty points. Distance is judged in kilometres. ≤ 2 km search radius.</p>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<input type="file" id="importFile" accept=".md,.markdown,text/markdown" style="display:none" onchange="handleImport(event)">
+
+<script>
+"use strict";
+
+/* ==================================================================
+   FOOD DATABASE — levels, scores, criteria, and honest "why" text.
+   Health Score = nutrition(30) + wholeFood(25) + sugarSalt(20)
+                  + healthyFats(15) + balance(10)  = /100
+================================================================== */
+const LEVELS = [
+  { id:"south", name:"South Indian", icon:"🌴", blurb:"Idli, dosa, curd rice — light and fermented." },
+  { id:"north", name:"North Indian", icon:"🍛", blurb:"Dal, roti, sabzi and streetside classics." },
+  { id:"indian", name:"Indian favourites", icon:"🇮🇳", blurb:"Street food and pan-Indian comfort." },
+  { id:"world", name:"International", icon:"🌍", blurb:"Global plates from pizza to power bowls." }
+];
+
+const FOODS = [
+  /* ---------- South Indian ---------- */
+  {
+    id:"idli", level:"south", name:"Idli + sambar", emoji:"🫓", cat:"everyday", veg:"Veg",
+    score:{ nutrition:26, whole:24, sugarSalt:18, fats:12, balance:9 },
+    why:"Steamed, fermented rice and lentil cakes. Fermentation pre-digests the grain, and the warm sambar adds protein-rich dal and vegetables. Very low in oil and salt.",
+    fact:"Idli batter ferments for hours — that friendly fizz is good bacteria doing work before you even eat!",
+    hint:"Think steam, not oil. Which dish never touches a frying pan?"
+  },
+  {
+    id:"dosa", level:"south", name:"Masala dosa", emoji:"🥞", cat:"sometimes", veg:"Veg",
+    score:{ nutrition:19, whole:18, sugarSalt:16, fats:8, balance:6 },
+    why:"Fermented and crisp — but the spiced potato filling is often cooked in generous amounts of oil or ghee, and many restaurants add extra butter. Score stays solid, not stellar.",
+    fact:"A dosa's crispness comes from a hot iron griddle — the oil, not the batter, carries the calories.",
+    hint:"It's lightly fermented like idli. The potato-and-ghee filling is the honest weak spot."
+  },
+  {
+    id:"curdrice", level:"south", name:"Curd rice", emoji:"🍚", cat:"everyday", veg:"Veg",
+    score:{ nutrition:19, whole:20, sugarSalt:18, fats:11, balance:7 },
+    why:"Cooling, probiotic yogurt over rice calms the stomach on hot days. Minimal salt, gentle fats, easy to digest. A quiet everyday hero.",
+    fact:"The probiotic bacteria in curd support gut health — ancient Indian food, future-proof science.",
+    hint:"Fermented, mild, and gut-friendly. It's the cooling classic."
+  },
+  {
+    id:"vada", level:"south", name:"Medu vada", emoji:"🍩", cat:"treat", veg:"Veg",
+    score:{ nutrition:14, whole:15, sugarSalt:16, fats:4, balance:4 },
+    why:"Protein-rich urad dal, yes! But deep-fried, which adds significant oil. Enjoy once in a while and keep the sambar bowl close.",
+    fact:"Vada is urad dal + batter + hot oil. The dal earns points; the frying spends them.",
+    hint:"It's made from dal and deep-fried. Which wins: the protein or the oil?"
+  },
+
+  /* ---------- North Indian ---------- */
+  {
+    id:"thali", level:"north", name:"Dal + roti + sabzi", emoji:"🍛", cat:"everyday", veg:"Veg",
+    score:{ nutrition:28, whole:25, sugarSalt:18, fats:13, balance:10 },
+    why:"A complete plate: plant protein (dal), whole-grain energy (roti), fibre and vitamins (sabzi). Moderate oil. This is the gold-standard student meal.",
+    fact:"Dal + roti is a 'complementary protein' — together they give your body the full amino acid set.",
+    hint:"Plant protein + whole grain + vegetables. Balanced plates should be everyday plates."
+  },
+  {
+    id:"rajma", level:"north", name:"Rajma chawal", emoji:"🫘", cat:"everyday", veg:"Veg",
+    score:{ nutrition:22, whole:20, sugarSalt:16, fats:10, balance:8 },
+    why:"Kidney beans are a fibre and protein powerhouse; rice gives steady energy. The ghee used in tempering adds flavour and a little healthy fat — keep servings sensible.",
+    fact:"Rajma gives you plant protein AND lots of fibre — fibre keeps you full and your heart happy.",
+    hint:"A bowl of beans with rice. Beans = protein + fibre. Score it high."
+  },
+  {
+    id:"paneer", level:"north", name:"Paneer butter masala + naan", emoji:"🧀", cat:"sometimes", veg:"Veg",
+    score:{ nutrition:16, whole:14, sugarSalt:13, fats:5, balance:5 },
+    why:"Paneer brings protein, but the heavy cream, butter and refined-flour naan push fat and calories up. A delicious sometimes-meal, not a daily plate.",
+    fact:"Cream, butter and ghee all count as fat — a 'butter masala' can hide more oil than the paneer itself.",
+    hint:"Cheese plate? The protein is real, but cream and refined naan cost points."
+  },
+  {
+    id:"paratha", level:"north", name:"Aloo paratha + butter", emoji:"🥔", cat:"treat", veg:"Veg",
+    score:{ nutrition:13, whole:12, sugarSalt:14, fats:4, balance:4 },
+    why:"Potato-stuffed flatbread cooked on a griddle with butter or ghee. Tasty and filling, but heavy on refined flour and fat. A weekend treat, mindful of butter.",
+    fact:"The butter on top can double a paratha's calories before you take one bite.",
+    hint:"Flour + potato + butter. That's the 'treat' trio."
+  },
+  {
+    id:"chole", level:"north", name:"Chole bhature", emoji:"🥣", cat:"treat", veg:"Veg",
+    score:{ nutrition:15, whole:12, sugarSalt:13, fats:3, balance:5 },
+    why:"Chickpeas are superb — but bhatura is deep-fried refined flour, and the gravy is heavy on oil. Splendid occasionally, heavy often.",
+    fact:"Chickpeas = fibre + protein + iron. Bhatura = fried maida. The pair is teaming up against your score.",
+    hint:"One part is a superhero (chickpeas). The other is fried dough."
+  },
+
+  /* ---------- Indian favourites / street ---------- */
+  {
+    id:"fruitchaat", level:"indian", name:"Fruit chaat", emoji:"🍉", cat:"everyday", veg:"Veg",
+    score:{ nutrition:25, whole:24, sugarSalt:17, fats:13, balance:9 },
+    why:"Fresh fruits deliver vitamins, water and fibre with no added oil. Watch the pinch of chaat masala salt and any sugar syrup — keep fruit the star.",
+    fact:"The colours in your fruit chaat are actually plant chemicals protecting your cells — eat a rainbow!",
+    hint:"Whole fruit, minimal processing. What could beat that?"
+  },
+  {
+    id:"poha", level:"indian", name:"Poha with peanuts", emoji:"🍲", cat:"everyday", veg:"Veg",
+    score:{ nutrition:21, whole:20, sugarSalt:16, fats:10, balance:8 },
+    why:"Flattened rice cooks fast, peanuts add protein and healthy fat, and turmeric and curry leaves bring antioxidant power. Light on oil, gentle on the stomach.",
+    fact:"Poha is steamed-flattened rice — gentler on digestion than the same rice boiled, plus iron from peanuts.",
+    hint:"Peanuts + turmeric + light rice. A quick, honest breakfast."
+  },
+  {
+    id:"dhokla", level:"indian", name:"Dhokla", emoji:"🍰", cat:"everyday", veg:"Veg",
+    score:{ nutrition:22, whole:21, sugarSalt:15, fats:10, balance:8 },
+    why:"Steamed — not fried — and made from fermented chickpea (besan) batter. High protein, low oil, satisfying. One of the smartest snacks in India.",
+    fact:"Steaming vs frying: dhokla uses air and moisture instead of oil. Same snack, half the fat.",
+    hint:"Steamed and fermented — a protein snack that skipped the fryer."
+  },
+  {
+    id:"samosa", level:"indian", name:"Samosa", emoji:"🥟", cat:"treat", veg:"Veg",
+    score:{ nutrition:11, whole:9, sugarSalt:14, fats:2, balance:3 },
+    why:"A crisp fried pastry around spiced potatoes. The potatoes are fine; the fried maida shell and soaked-in oil are not. A treat — best shared, not daily.",
+    fact:"A single samosa can hold as much oil as several spoons of cooking fat. Crispy = crunchy oil.",
+    hint:"Golden, flaky, fried. That crunch is mostly oil."
+  },
+  {
+    id:"panipuri", level:"indian", name:"Pani puri", emoji:"🫧", cat:"treat", veg:"Veg",
+    score:{ nutrition:12, whole:10, sugarSalt:11, fats:4, balance:3 },
+    why:"So fun, and honestly full of flavour — but crisp puris are deep-fried and street water can be risky. Enjoy the taste; watch the intake and the hygiene.",
+    fact:"The puri puff is fried starch. Fun in the mouth, light in the nutrition department.",
+    hint:"Crispy fried shells + chickpea water. What's the weak link?"
+  },
+
+  /* ---------- International ---------- */
+  {
+    id:"salad", level:"world", name:"Grilled falafel grain bowl", emoji:"🥗", cat:"everyday", veg:"Vegan",
+    score:{ nutrition:26, whole:23, sugarSalt:18, fats:12, balance:9 },
+    why:"Grilled (not fried) falafel with wholegrain, greens and seeds: plant protein, fibre, healthy fats and crunch. Dressing matters — ask for it on the side.",
+    fact:"A bowl with 5+ colours from plants usually beats a single-colour plate. That's a fun rule of thumb!",
+    hint:"Grilled + greens + grains. Compare its dressing before you add it."
+  },
+  {
+    id:"pasta", level:"world", name:"Whole-wheat pasta + veggies", emoji:"🍝", cat:"everyday", veg:"Vegetarian",
+    score:{ nutrition:21, whole:20, sugarSalt:16, fats:10, balance:7 },
+    why:"Whole-wheat pasta keeps the grain's fibre, and a tomato-vegetable sauce delivers vitamins without cream. Sauce in moderation — it can hide sugar and salt.",
+    fact:"'Whole-wheat' means the fibre-rich bran survived. White pasta has been polished — like polishing a football to make it slippery!",
+    hint:"Whole-grain base + vegetable sauce beats cream sauce every time."
+  },
+  {
+    id:"sushi", level:"world", name:"Veggie sushi", emoji:"🍣", cat:"everyday", veg:"Vegetarian",
+    score:{ nutrition:20, whole:19, sugarSalt:15, fats:11, balance:7 },
+    why:"Rice + avocado, cucumber and nori: a compact, low-oil, portion-controlled bite with healthy fats from avocado. The soy sauce dip is the salt trap — dip lightly.",
+    fact:"Nori (seaweed) is packed with iodine and minerals most snacks simply don't have.",
+    hint:"Small, neat and low on oil. Watch the soy-sauce dunk."
+  },
+  {
+    id:"burger", level:"world", name:"Classic burger + fries", emoji:"🍔", cat:"treat", veg:"Veg",
+    score:{ nutrition:11, whole:8, sugarSalt:12, fats:2, balance:4 },
+    why:"Refined bun, fried patty, sugary sauce and deep-fried fries — a fast, heavy meal. Choosing grilled and adding a side salad turns it around.",
+    fact:"A fast-food fries portion can contain a day's worth of salt all by itself.",
+    hint:"Fried bun, fried patty, fried fries. What should you add instead?"
+  },
+  {
+    id:"pizza", level:"world", name:"Veggie pizza", emoji:"🍕", cat:"sometimes", veg:"Veg",
+    score:{ nutrition:17, whole:14, sugarSalt:13, fats:7, balance:6 },
+    why:"A thin-crust veggie pizza with tomato sauce can be a reasonable meal — vegetables, some protein from cheese, moderate oil. It's the thick crust, extra cheese and pepperoni that sink it.",
+    fact:"Thin crust + more veg + less cheese: a pizza can be 'health-neutral' or a treat — your toppings decide.",
+    hint:"Judge the crust thickness and the veg-to-cheese ratio."
+  },
+  {
+    id:"oatmeal", level:"world", name:"Oat bowl + fruit", emoji:"🥣", cat:"everyday", veg:"Vegan",
+    score:{ nutrition:27, whole:25, sugarSalt:18, fats:13, balance:9 },
+    why:"Rolled oats bring beta-glucan (a heart-loving fibre), milk adds protein, and fruit adds vitamins and natural sweetness. Add nuts for healthy fats — minimal added sugar.",
+    fact:"Oats' beta-glucan is a soluble fibre that helps manage cholesterol — breakfast doing science.",
+    hint:"Whole grain + fruit + nuts. A top-score solo breakfast."
+  }
+].map(function(f){
+  f.score.total = f.score.nutrition + f.score.whole + f.score.sugarSalt + f.score.fats + f.score.balance;
+  f.levelName = LEVELS.find(l => l.id === f.level).name;
+  return f;
+});
+
+/* ==================================================================
+   HELPERS
+================================================================== */
+const $ = (id) => document.getElementById(id);
+
+function switchView(name){
+  document.querySelectorAll('section.view').forEach(s => s.classList.remove('active'));
+  $('view-' + name).classList.add('active');
+  document.querySelectorAll('nav.header-nav button').forEach(b => b.classList.toggle('active', b.dataset.view === name));
+  if(name === 'play')           renderLevels();
+  if(name === 'browse')         renderBrowse();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function toast(msg, ms){
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._h);
+  t._h = setTimeout(() => t.classList.remove('show'), ms || 2400);
+}
+
+function closeModal(id){ $('main').setAttribute('inert',''); $('main').removeAttribute('inert'); $(id) && $(id).classList.remove('open'); document.body.style.overflow=''; }
+
+function openModal(id){ $('main').setAttribute('inert',''); $(id).classList.add('open'); document.body.style.overflow='hidden'; }
+
+document.querySelectorAll('.modal-backdrop').forEach(b => b.addEventListener('click', e => {
+  if(e.target === b) closeModal(b.id);
+}));
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') document.querySelectorAll('.modal-backdrop.open').forEach(m => closeModal(m.id));
+});
+
+function catBadge(cat){
+  const map = {everyday:['everyday','💚'], sometimes:['sometimes','🧡'], treat:['treat','❤️']};
+  const [cls, ic] = map[cat] || ['everyday','💚'];
+  return `<span class="badge ${cls}">${ic} ${cat}</span>`;
+}
+
+function catClass(score){
+  if(score >= 70) return '';
+  if(score >= 50) return 'mid';
+  return 'low';
+}
+
+function scorePill(score){
+  return `<span class="score-pill ${catClass(score)}">Score ${score}/100</span>`;
+}
+
+/* ==================================================================
+   PLAY
+================================================================== */
+let currentLevel = null;
+let roundFoods = [];
+let roundCorrect = null;
+
+function renderLevels(){
+  const chips = $('levelChips'), grid = $('levelGrid');
+  chips.innerHTML = LEVELS.map(l =>
+    `<button class="chip ${currentLevel===l.id?'active':''}" onclick="selectLevel('${l.id}')">${l.icon} ${l.name}</button>`
+  ).join('');
+  const filtered = FOODS.filter(f => !currentLevel || f.level === currentLevel);
+  grid.innerHTML = filtered.map(f => `
+    <button class="level-card" onclick="openFoodModal('${f.id}')" aria-label="${f.name} — score ${f.score.total} out of 100">
+      <span class="food-emoji">${f.emoji}</span>
+      <h3>${f.name}</h3>
+      <p>${f.levelName} · ${catBadge(f.cat)}</p>
+      ${scorePill(f.score.total)}
+    </button>`).join('');
+}
+
+function selectLevel(id){
+  currentLevel = currentLevel === id ? null : id;
+  renderLevels();
+}
+
+function pickTwo(){
+  const pool = currentLevel
+    ? FOODS.filter(f => f.level === currentLevel)
+    : FOODS.slice();
+  const a = pool[Math.floor(Math.random() * pool.length)];
+  let b;
+  let guard = 0;
+  do {
+    b = pool[Math.floor(Math.random() * pool.length)];
+    guard++;
+  } while (a.id === b.id && guard < 20 && pool.length > 1);
+  return [a, b];
+}
+
+function startRound(){
+  const [a, b] = pickTwo();
+  roundFoods = [a, b];
+  const higher = a.score.total >= b.score.total ? a : b;
+  const lower  = higher === a ? b : a;
+  roundCorrect = higher;
+  $('roundArea').style.display = 'block';
+  $('roundTitle').textContent = '🔍 Which is healthier?';
+  $('roundSub').innerHTML = `Both are <strong>${a.levelName}</strong>-style foods, but one leaves you with more energy. Tap the healthier one — no timer, no penalty.`;
+  $('roundCards').innerHTML = [a, b].map((f, i) => `
+    <button class="level-card" onclick="answerRound(${i})" aria-label="Choose ${f.name}">
+      <span class="food-emoji">${f.emoji}</span>
+      <h3>${f.name}</h3>
+      <p>${f.levelName} · ${catBadge(f.cat)}</p>
+    </button>`).join('');
+  $('roundHint').style.display = 'inline-flex';
+  $('verdictArea').style.display = 'none';
+  $('verdictArea').innerHTML = '';
+  const va = $('verdictArea');
+  va.scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i = a.length-1; i>0; i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+
+function answerRound(idx){
+  const chosen = roundFoods[idx];
+  const right = chosen.id === roundCorrect.id;
+  const other = roundFoods.find(f => f.id !== chosen.id);
+  const va = $('verdictArea');
+
+  const verdict = right ?
+    `<div class="verdict right">💚 Correct — and even better, now you know <em>why</em>.</div>` :
+    `<div class="verdict forgiving">🌱 Interesting choice! In Health Quest, a "wrong" answer is just a new idea to add to your toolkit. Here's the honest breakdown:</div>`;
+
+  va.innerHTML = verdict + `
+    <div class="grid auto" style="margin-top:14px">
+      ${[chosen, other].map(f => foodScoreCard(f, f.id === right ? 'Your pick' : (f.id === chosen.id ? 'Your pick' : 'The healthier option'))).join('')}
+    </div>
+    <div class="h-stack" style="margin-top:16px;flex-wrap:wrap">
+      <button class="btn btn-soft" onclick="startRound()">Next pair →</button>
+    </div>`;
+  va.style.display = 'block';
+  $('roundCards').innerHTML = `
+    <div class="level-card" style="border-color:var(--primary);align-items:center">
+      <span style="font-size:1.6rem">${right ? '✅' : '🌱'}</span>
+      <h3>${right ? 'You picked the healthier meal!' : 'Great try — you learned something new'}</h3>
+      <p>${right ? `<strong style="color:var(--primary-dark)">${chosen.name}</strong> (${chosen.score.total}/100) beats ${other.name} (${other.score.total}/100).` : `The healthier pick was <strong style="color:var(--primary-dark)">${roundCorrect.name}</strong> (${roundCorrect.score.total}/100).`}</p>
+    </div>`;
+  $('roundHint').style.display = 'none';
+
+  setTimeout(() => { const r = va.getBoundingClientRect(); if(r.top < 40) window.scrollBy({top:-60, behavior:'smooth'}); }, 60);
+}
+
+function foodScoreCard(f, label){
+  const cat = catClass(f.score.total);
+  return `
+  <div class="card">
+    <div class="h-stack" style="justify-content:space-between">
+      <div class="h-stack">
+        <span style="font-size:1.7rem">${f.emoji}</span>
+        <div><b style="font-size:.95rem">${f.name}</b><br><span class="muted" style="font-size:.72rem">${label || f.levelName}</span></div>
+      </div>
+      <div class="big-num ${cat}">${f.score.total}</div>
+    </div>
+
+    <div style="margin-top:12px">
+      <div class="scale-row"><span class="label">🧬 Nutrition</span><div class="bar"><i class="${cat}" style="width:${f.score.nutrition/30*100}%"></i></div><span class="val">${f.score.nutrition}/30</span></div>
+      <div class="scale-row"><span class="label">🌾 Whole-food</span><div class="bar"><i style="width:${f.score.whole/25*100}%"></i></div><span class="val">${f.score.whole}/25</span></div>
+      <div class="scale-row"><span class="label">🧂 Sugar &amp; salt</span><div class="bar"><i style="width:${f.score.sugarSalt/20*100}%"></i></div><span class="val">${f.score.sugarSalt}/20</span></div>
+      <div class="scale-row"><span class="label">🥑 Healthy fats</span><div class="bar"><i style="width:${f.score.fats/15*100}%"></i></div><span class="val">${f.score.fats}/15</span></div>
+      <div class="scale-row"><span class="label">⚖️ Balance</span><div class="bar"><i style="width:${f.score.balance/10*100}%"></i></div><span class="val">${f.score.balance}/10</span></div>
+    </div>
+
+    <div class="divider"></div>
+    <button class="btn btn-ghost btn-block" onclick="document.getElementById('why-${f.id}').style.display = document.getElementById('why-${f.id}').style.display==='block'?'none':'block'">🔍 Why this rating</button>
+    <div id="why-${f.id}" style="display:none;margin-top:10px">
+      <p style="font-size:.9rem">${f.why}</p>
+      <div class="hint-box" style="margin-top:10px">💡 ${f.fact}</div>
+    </div>
+  </div>`;
+}
+
+async function roundHint(){
+  if(!roundCorrect) return;
+  const hint = await getHint(roundFoods[0], roundFoods[1]);
+  if(hint) toast('💡 ' + hint, 4200);
+}
+
+/* ---------- Single food modal ---------- */
+function openFoodModal(id){
+  const f = FOODS.find(x => x.id === id);
+  if(!f) return;
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-backdrop open';
+  overlay.setAttribute('role','dialog'); overlay.setAttribute('aria-modal','true'); overlay.setAttribute('aria-label', f.name);
+  overlay.innerHTML = `
+    <div class="modal">
+      <button class="modal-close" aria-label="Close">✕</button>
+      <div class="h-stack" style="justify-content:space-between">
+        <div class="h-stack"><span style="font-size:2.2rem">${f.emoji}</span><div><h3>${f.name}</h3><span class="muted" style="font-size:.8rem">${f.levelName} · ${catBadge(f.cat)}</span></div></div>
+      </div>
+      <p class="lead" style="margin-top:10px">${f.why}</p>
+      <div class="hint-box" style="margin-top:12px">💡 ${f.fact}</div>
+      <div style="margin-top:14px">${foodScoreCard(f, 'Full health card')}</div>
+      <button class="btn btn-primary btn-block" style="margin-top:12px" onclick="switchView('play'), overlay.remove(), document.body.style.overflow=''">🏆 Use ${escapeHtml(f.name)} in a round</button>
+    </div>`;
+  overlay.querySelector('.modal-close').onclick = () => { overlay.remove(); document.body.style.overflow=''; };
+  overlay.querySelector('.modal').style.pointerEvents='auto';
+  overlay.addEventListener('click', e => { if(e.target === overlay) overlay.remove(); });
+  document.body.style.overflow='hidden';
+  document.body.appendChild(overlay);
+}
+
+/* ==================================================================
+   FOOD LAB + MARKDOWN
+================================================================== */
+function renderBrowse(){
+  const q = ($('foodSearch').value || '').trim().toLowerCase();
+  const list = FOODS.filter(f => !q || f.name.toLowerCase().includes(q) || f.why.toLowerCase().includes(q));
+  $('browseGrid').innerHTML = list.length ? list.map(f => `
+    <div class="card food-card">
+      <span class="food-emoji">${f.emoji}</span>
+      <div class="food-name">${f.name}</div>
+      <div class="food-desc">${f.levelName} · ${catBadge(f.cat)}</div>
+      ${scorePill(f.score.total)}
+      <div class="h-stack" style="margin-top:10px">
+        <button class="btn btn-soft" onclick="openFoodModal('${f.id}')">Full card</button>
+        <button class="btn btn-ghost" onclick="quickHint('${f.id}')">💡 Hint</button>
+      </div>
+    </div>`).join('') : `<p class="muted">No foods match “${q}”.</p>`;
+}
+
+async function quickHint(id){
+  const f = FOODS.find(x => x.id === id);
+  const hint = await getHint(f, null);
+  if(hint) toast('💡 ' + hint, 4200);
+}
+
+function exportMarkdown(){
+  const lines = [];
+  lines.push('# Health Quest — Food Database (v3.1)');
+  lines.push('');
+  lines.push('> Every food carries a Health Score out of 100 from 5 transparent criteria:');
+  lines.push('> **Nutrition (30)** + **Whole-food factor (25)** + **Sugar & salt (20)** + **Healthy fats (15)** + **Balance & portion (10)**.');
+  lines.push('');
+  lines.push('| Level | Food | Emoji | Category | Health Score | Nutrition /30 | Whole-food /25 | Sugar & salt /20 | Healthy fats /15 | Balance /10 |');
+  lines.push('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |');
+  FOODS.forEach(f => {
+    lines.push(`| ${f.levelName} | ${f.name} | ${f.emoji} | ${f.cat} | **${f.score.total}** | ${f.score.nutrition} | ${f.score.whole} | ${f.score.sugarSalt} | ${f.score.fats} | ${f.score.balance} |`);
+  });
+  lines.push('');
+  lines.push('---');
+  lines.push('');
+  lines.push('## Why this rating — honest explanations');
+  lines.push('');
+  FOODS.forEach(f => {
+    lines.push(`### ${f.emoji} ${f.name} — ${f.score.total}/100 (${f.cat})`);
+    lines.push(`- **Level:** ${f.levelName}`);
+    lines.push(`- **Why:** ${f.why}`);
+    lines.push(`- **Fact:** ${f.fact}`);
+    lines.push('');
+  });
+  lines.push('---');
+  lines.push('Made with 💚 by Health Quest for the PanIIT Andhra Pradesh Ideathon 2026. No pressure, no timers, no tracking — only understanding.');
+  const md = lines.join('\n');
+  downloadFile('health-quest-foods.md', md, 'text/markdown');
+  toast('✅ Markdown exported');
+}
+
+function importMarkdown(){
+  $('importFile').click();
+}
+
+function handleImport(e){
+  const file = e.target.files[0];
+  e.target.value = '';
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const text = String(reader.result);
+    const parsed = parseMarkdownDb(text);
+    if(parsed.length){
+      FOODS.length = 0;
+      parsed.forEach(f => FOODS.push(f));
+      renderLevels(); renderBrowse();
+      toast(`✅ Imported ${parsed.length} foods from the .md file`);
+    } else {
+      toast('⚠️ Could not read foods from that .md file');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function parseMarkdownDb(text){
+  const rows = text.split('\n').filter(l => l.trim().startsWith('|') && l.includes('**') && l.includes('/30')).filter((l, i, arr) => i > 0 && l.includes('|'));
+  return rows.map(row => {
+    const cells = row.split('|').map(c => c.trim()).filter((c, i) => i > 0 && i < 10);
+    const name = cells[1];
+    const total = parseInt((cells[4].match(/\d+/)||[])[0] || '0', 10);
+    const s = {
+      nutrition: +cells[5]||0, whole: +cells[6]||0, sugarSalt: +cells[7]||0,
+      fats: +cells[8]||0, balance: +cells[9]||0
+    };
+    s.total = total || (s.nutrition + s.whole + s.sugarSalt + s.fats + s.balance);
+    const level = LEVELS.find(l => l.name === cells[0]) || LEVELS[0];
+    return {
+      id: 'imp' + Math.random().toString(36).slice(2,7),
+      level: level.id,
+      name: name || 'Imported food',
+      emoji: cells[2] || '🍽️',
+      cat: ['everyday','sometimes','treat'].includes(cells[3]) ? cells[3] : 'sometimes',
+      veg: 'Veg',
+      score: s,
+      why: 'Imported from a markdown database.',
+      fact: 'Data brought in via the transparent .md exchange format.',
+      hint: ''
+    };
+  });
+}
+
+function downloadFile(name, content, type){
+  const blob = new Blob([content], {type: type});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+
+/* ==================================================================
+   AI HINTS — BYOK (OpenRouter / NVIDIA) with offline fallback
+================================================================== */
+function getKeys(){
+  return {
+    openrouter: localStorage.getItem('hq_openrouter') || '',
+    nvidia: localStorage.getItem('hq_nvidia') || ''
+  };
+}
+
+function openKeys(){
+  const k = getKeys();
+  $('openrouterKey').value = k.openrouter;
+  $('nvidiaKey').value = k.nvidia;
+  openModal('keysModal');
+}
+
+function saveKeys(){
+  localStorage.setItem('hq_openrouter', $('openrouterKey').value.trim());
+  localStorage.setItem('hq_nvidia', $('nvidiaKey').value.trim());
+  closeModal('keysModal');
+  toast('🔑 Keys saved locally only');
+}
+
+function clearKeys(){
+  localStorage.removeItem('hq_openrouter');
+  localStorage.removeItem('hq_nvidia');
+  $('openrouterKey').value = '';
+  $('nvidiaKey').value = '';
+  toast('🗑️ Keys cleared');
+}
+
+function livePreviewKeys(){
+  const has = $('openrouterKey').value || $('nvidiaKey').value;
+}
+
+function offlineHint(a, b){
+  if(b){
+    const higher = a.score.total >= b.score.total ? a : b;
+    const lower = higher === a ? b : a;
+    return `Compare honestly: ${higher.name} (${higher.score.total}/100) beats ${lower.name} (${lower.score.total}/100). ${higher.why}`;
+  }
+  return a.why;
+}
+
+async function callLLM(system, prompt){
+  const keys = getKeys();
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 25000);
+
+  if(keys.openrouter){
+    try {
+      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+keys.openrouter },
+        body: JSON.stringify({
+          model: 'deepseek/deepseek-chat-v3-0324:free',
+          messages: [
+            { role:'system', content: system },
+            { role:'user', content: prompt }
+          ],
+          max_tokens: 180
+        }),
+        signal: controller.signal
+      });
+      clearTimeout(timer);
+      if(!res.ok) throw new Error('OpenRouter HTTP '+res.status);
+      const data = await res.json();
+      const out = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+      if(out) return out.trim();
+    } catch(err){
+      console.warn('OpenRouter failed:', err.message);
+    }
+  }
+
+  if(keys.nvidia){
+    try {
+      const res = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type':'application/json','Authorization':'Bearer '+keys.nvidia },
+        body: JSON.stringify({
+          model: 'meta/llama-3.3-70b-instruct',
+          messages: [
+            { role:'system', content: system },
+            { role:'user', content: prompt }
+          ],
+          max_tokens: 180
+        }),
+        signal: controller.signal
+      });
+      clearTimeout(timer);
+      if(!res.ok) throw new Error('NVIDIA HTTP '+res.status);
+      const data = await res.json();
+      const out = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
+      if(out) return out.trim();
+    } catch(err){
+      console.warn('NVIDIA failed:', err.message);
+    }
+  }
+  clearTimeout(timer);
+  return null;
+}
+
+async function getHint(a, b){
+  if(!navigator.onLine) return offlineHint(a, b);
+  const system = 'You are a friendly, honest nutrition coach for Indian school students aged 13-18. Give SHORT, encouraging, judgment-free nutrition guidance (2-3 sentences). Never shame food. Never recommend restriction or weight loss.';
+  const foodList = FOODS.map(f => `${f.name} (${f.score.total}/100)`).join(', ');
+  const prompt = b
+    ? `Compare which of these two foods is healthier and WHY in simple terms:\nA = ${a.name} (${a.score.total}/100), B = ${b.name} (${b.score.total}/100).\nFull database: ${foodList}.`
+    : `Explain simply why ${a.name} scores ${a.score.total}/100. Facts I have: ${a.why}`;
+  const ai = await callLLM(system, prompt);
+  if(ai) return ai;
+  return offlineHint(a, b);
+}
+
+/* ==================================================================
+   LOCATE NEARBY — consent-first, real OpenStreetMap data
+================================================================== */
+let _lastVenues = [];
+let _lastCenter = null;
+
+function locateStatus(msg, cls){
+  const el = $('locStatus');
+  el.className = 'loc-status show ' + (cls || '');
+  el.textContent = msg;
+}
+
+function distanceKm(lat1, lon1, lat2, lon2){
+  const R = 6371, dLat = (lat2-lat1)*Math.PI/180, dLon = (lon2-lon1)*Math.PI/180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+function geocodePincode(q){
+  const url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=in&q=' + encodeURIComponent(q);
+  return fetch(url).then(r => {
+    if(!r.ok) throw new Error('Geocoding failed');
+    return r.json();
+  }).then(arr => {
+    if(!arr || !arr.length) throw new Error('No place found');
+    return { lat: parseFloat(arr[0].lat), lon: parseFloat(arr[0].lon), name: arr[0].display_name };
+  });
+}
+
+function locateByPincode(){
+  const q = $('pincodeInput').value.trim();
+  if(!q){ locateStatus('⚠️ Please enter a PIN code or city name first.', 'warn'); return; }
+  locateStatus('🔍 Geocoding “' + q + '” (privacy-safe: one lookup, nothing stored)...');
+  geocodePincode(q).then(place => {
+    locateStatus(`📍 Found "${place.name.slice(0,60)}" — searching real eateries nearby…`);
+    searchVenues(place.lat, place.lon, q);
+  }).catch(err => {
+    console.warn(err);
+    locateStatus('⚠️ Could not find that place. Try the full PIN code or a nearby city name.', 'warn');
+  });
+}
+
+function useLocation(){
+  if(!navigator.geolocation){ locateStatus('⚠️ This browser does not support location. Use a PIN code instead.', 'warn'); return; }
+  locateStatus('📍 Waiting for your permission… (you can deny anytime — a PIN code works too)');
+  navigator.geolocation.getCurrentPosition(
+    pos => { locateStatus('✅ Got one-time location — searching real eateries…'); searchVenues(pos.coords.latitude, pos.coords.longitude, 'my location'); },
+    err => locateStatus('⚠️ Location not shared or blocked. No problem — use a PIN code instead. We never store anything.', 'warn'),
+    { enableHighAccuracy:false, timeout:10000, maximumAge:300000 }
+  );
+}
+
+function getProxyUrl(){
+  const host = location.hostname || '';
+  if(host.endsWith('netlify.app') || host.includes('netlify')) return '/.netlify/functions/overpass';
+  if(location.protocol.startsWith('http')) return '/api/overpass';
+  return '/api/overpass';
+}
+
+async function searchVenues(lat, lon, label){
+  $('venueList').innerHTML = '<div class="skeleton" style="height:100px;margin-top:14px"></div>';
+  $('venueCount').textContent = '';
+  $('whyRatingBtn').style.display = 'inline-flex';
+  _lastCenter = {lat, lon, label};
+
+  const query = `
+    [out:json][timeout:20];
+    (
+      node["amenity"~"restaurant|cafe|fast_food"](around:2000,${lat},${lon});
+      way["amenity"~"restaurant|cafe|fast_food"](around:2000,${lat},${lon});
+    );
+    out center 30;
+  `;
+
+  const started = Date.now();
+  try {
+    const proxyUrl = getProxyUrl();
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+    const response = await fetch(proxyUrl, {
+      method: 'POST',
+      headers: { 'Content-Type':'application/x-www-form-urlencoded' },
+      body: 'data=' + encodeURIComponent(query),
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+    const took = ((Date.now()-started)/1000).toFixed(1);
+    if(!response.ok) throw new Error('Proxy responded with status ' + response.status);
+    const data = await response.json();
+    if(!data || !data.elements) throw new Error('No data received');
+
+    const venues = data.elements
+      .map(el => {
+        const tags = el.tags || {};
+        const vlat = el.lat ?? (el.center && el.center.lat);
+        const vlon = el.lon ?? (el.center && el.center.lon);
+        if(!vlat || !vlon) return null;
+        return {
+          name: tags.name || 'Unnamed eatery',
+          type: tags.amenity || 'restaurant',
+          cuisine: tags.cuisine || '',
+          phone: tags.phone || tags['contact:phone'] || '',
+          website: tags.website || tags['contact:website'] || '',
+          hours: tags.opening_hours || '',
+          vegetarian: tags['diet:vegetarian'] === 'yes',
+          vegan: tags['diet:vegan'] === 'yes',
+          organic: tags.organic === 'yes',
+          lat: vlat, lon: vlon,
+          distance: distanceKm(lat, lon, vlat, vlon)
+        };
+      })
+      .filter(v => v && v.distance <= 2.0)
+      .sort((a, b) => a.distance - b.distance)
+      .slice(0, 12);
+
+    if(!venues.length){
+      locateStatus('ℹ️ No eateries found within 2 km (answer received in ' + took + 's). Try a different PIN code or a busier city.', 'warn');
+      $('venueList').innerHTML = '';
+      $('venueCount').textContent = '';
+      return;
+    }
+
+    _lastVenues = venues;
+    locateStatus(`✅ Found ${venues.length} real eateries within 2 km (in ${took}s). Nothing stored, nothing tracked.`);
+    $('venueCount').textContent = `📍 ${venues.length} eateries near "${label || 'you'}" — rated on clear criteria`;
+    renderVenues(venues);
+
+  } catch(error){
+    console.warn('Live search failed:', error);
+    locateStatus('⚠️ Live search unavailable right now (offline or proxy sleeping). Showing clearly-labelled sample eateries for the demo.', 'warn');
+    $('venueCount').textContent = '';
+    renderSampleVenues();
+  }
+}
+
+function venueRating(v){
+  const typeScore = v.type === 'restaurant' ? 20 : v.type === 'cafe' ? 15 : 5;
+  const distanceScore = Math.max(0, Math.round(30 - v.distance * 12));
+  let healthScore = 0;
+  if(v.vegetarian) healthScore += 10;
+  if(v.vegan) healthScore += 10;
+  healthScore = Math.min(20, healthScore);
+  let infoScore = 0;
+  if(v.hours) infoScore += 10;
+  if(v.phone) infoScore += 10;
+  if(v.website) infoScore += 10;
+  infoScore = Math.min(30, infoScore);
+  const total = Math.min(100, typeScore + distanceScore + healthScore + infoScore);
+  return { total, parts:[
+    ['🍽️ Eatery type', typeScore, 20],
+    ['🚶 Near-enough', distanceScore, 30],
+    ['🥬 Healthful options', healthScore, 20],
+    ['🗓️ Honest info', infoScore, 30]
+  ]};
+}
+
+function venueEmoji(type){
+  if(type === 'cafe') return '☕';
+  if(type === 'fast_food') return '🍟';
+  return '🍽️';
+}
+
+function renderVenues(venues){
+  $('venueList').innerHTML = venues.map(v => {
+    const r = venueRating(v);
+    return `
+    <div class="venue-row">
+      <span class="venue-emoji">${venueEmoji(v.type)}</span>
+      <div>
+        <div class="venue-name">${escapeHtml(v.name)}</div>
+        <div class="venue-meta">${v.type.replace('_',' ')} · ${v.distance.toFixed(2)} km away${v.cuisine ? ' · ' + escapeHtml(v.cuisine) : ''}</div>
+        <div class="venue-tags">
+          ${v.vegetarian ? '<span>🥬 Vegetarian</span>' : ''}
+          ${v.vegan ? '<span>🌱 Vegan</span>' : ''}
+          ${v.organic ? '<span>🌾 Organic</span>' : ''}
+          ${v.hours ? '<span>🕒 Hours listed</span>' : ''}
+        </div>
+        <div class="venue-more">
+          <button class="btn btn-ghost" onclick="venueWhy(${JSON.stringify(v).replace(/"/g,'&quot;')}, this)">🔍 Why this rating</button>
+          <button class="btn btn-ghost" onclick="openMaps(${v.lat},${v.lon},'${escapeHtml(v.name)}')">🗺️ Open in Maps</button>
+          ${v.phone ? `<button class="btn btn-ghost" onclick="callVenue('${escapeHtml(v.phone)}')">📞 Call</button>` : ''}
+          ${v.website ? `<button class="btn btn-ghost" onclick="window.open('${escapeHtml(v.website)}','_blank','noopener')">🌐 Website</button>` : ''}
+        </div>
+      </div>
+      <div class="venue-rating"><span style="font-size:1.35rem">${r.total}</span><br><span class="muted" style="font-size:.68rem">/100</span></div>
+    </div>`;
+  }).join('');
+}
+
+function renderSampleVenues(){
+  const samples = [
+    { name:'Annapurna Andhra Meals', type:'restaurant', cuisine:'andhra', vegetarian:true, hours:'Mon–Sat 11am–3pm', distance:0.4 },
+    { name:'Sunrise Idli Shop', type:'restaurant', cuisine:'south_indian', vegetarian:true, hours:'5:30am–11am', distance:0.7 },
+    { name:'Campus Greens Cafe', type:'cafe', cuisine:'continental', vegan:true, organic:true, hours:'9am–9pm', distance:1.1 },
+    { name:'Chai Junction (demo)', type:'cafe', cuisine:'indian', hours:'8am–11pm', distance:1.4 }
+  ];
+  const venues = samples.map((s, i) => Object.assign({}, s, { lat:0, lon:0, phone:'', website:'' }));
+  $('venueList').innerHTML = venues.map(v => {
+    const r = venueRating(v);
+    return `
+    <div class="venue-row" style="opacity:.92">
+      <span class="venue-emoji">${venueEmoji(v.type)}</span>
+      <div>
+        <div class="venue-name">${v.name}</div>
+        <div class="venue-meta">${v.type.replace('_',' ')} · ${v.distance.toFixed(2)} km · ⚠️ sample data for demo</div>
+        <div class="venue-tags">
+          ${v.vegetarian ? '<span>🥬 Vegetarian</span>' : ''}
+          ${v.vegan ? '<span>🌱 Vegan</span>' : ''}
+          ${v.organic ? '<span>🌾 Organic</span>' : ''}
+          ${v.hours ? '<span>🕒 Hours listed</span>' : ''}
+        </div>
+        <div class="venue-more">
+          <button class="btn btn-ghost" onclick="venueWhy(${JSON.stringify(v).replace(/"/g,'&quot;')}, this)">🔍 Why this rating</button>
+        </div>
+      </div>
+      <div class="venue-rating"><span style="font-size:1.35rem">${r.total}</span><br><span class="muted" style="font-size:.68rem">/100</span></div>
+    </div>`;
+  }).join('');
+  $('venueCount').textContent = '⚠️ Demo mode — offline sample places. Deploy and connect the proxy for real ones.';
+  $('whyRatingBtn').style.display = 'none';
+}
+
+function venueWhy(v, btn){
+  const r = venueRating(v);
+  btn.closest('.venue-row').insertAdjacentHTML('afterend', `
+    <div class="card" style="margin-top:10px">
+      <b>Rating for ${escapeHtml(v.name)} — ${r.total}/100</b>
+      ${r.parts.map(p => `<div class="scale-row"><span class="label">${p[0]}</span><div class="bar"><i class="${catClass(p[1]/(1))}" style="width:${(p[1]/p[3])*100}%"></i></div><span class="val">${p[1]}/${p[3]}</span></div>`).join('')}
+      <p class="muted" style="font-size:.84rem;margin-top:8px">Honest note: this is a data-based estimate from public OpenStreetMap info, not a health inspection. Always trust your own eyes (and your doctor) too.</p>
+    </div>`);
+  btn.remove();
+}
+
+function openMaps(lat, lon, name){
+  const url = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(name + ' ' + lat + ',' + lon);
+  window.open(url, '_blank', 'noopener');
+}
+
+function callVenue(phone){
+  window.open('tel:' + phone.replace(/[^\d+]/g,''), '_self');
+}
+
+function showRatingFormula(){ openModal('ratingModal'); }
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ==================================================================
+   ABOUT / FAQ
+================================================================== */
+const FAQS = [
+  ['Does Health Quest track me or my device?', 'No. No analytics, no cookies, no fingerprints, no accounts. If you share your location, it is used for a single search and then forgotten. Keys stay in your own browser.'],
+  ['Why are there no timers or streaks?', 'Case studies like the Blue Whale challenge showed that pressure mechanics hurt vulnerable children. We believe you learn best when you feel safe, so nothing here can ever punish you.'],
+  ['Why do some “once in a while” foods appear?', 'Demonising food doesn’t work — it makes kids anxious. We rate honestly so you can enjoy a samosa AND understand exactly what it costs your body.'],
+  ['How accurate are the Health Scores?', 'They are built from widely accepted nutrition principles (processing level, added sugar/salt, fat quality, fibre and protein) and are fully published. They are learning tools, not medical advice.'],
+  ['Where does the eatery data come from?', 'OpenStreetMap, the free open map edited by volunteers worldwide. The serverless proxy fetches it for us because browsers block cross-site requests. Everything is rated on the same visible criteria.'],
+  ['How can judges verify this is real?', 'Open the published criteria, compare any food’s score bars to its explanation, export the .md database, and enter any real PIN code to see real eateries. It is all transparent by design.']
+];
+
+function renderFaqs(){
+  $('faqList').innerHTML = FAQS.map((q, i) => `
+    <div class="faq-item" id="faq-${i}">
+      <button class="faq-q" onclick="toggleFaq(${i})">${q[0]} <span class="chev">▾</span></button>
+      <div class="faq-a">${q[1]}</div>
+    </div>`).join('');
+}
+
+function toggleFaq(i){
+  const el = $('faq-' + i);
+  el.classList.toggle('open');
+}
+
+/* ==================================================================
+   INIT
+================================================================== */
+function init(){
+  renderFaqs();
+  renderLevels();
+  renderBrowse();
+  const live = location.protocol.startsWith('http');
+  if(live){ console.log('Health Quest v3.1 — live environment detected. Proxy: ' + getProxyUrl()); }
+}
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

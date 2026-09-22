@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Health Quest — IEEE configuration and standards alignment. IEEE 7000, IEEE 29148, IEEE 12207 and citation format.">
+<meta name="author" content="K Subramanya Satyanarayana, St. John's English Medium School">
+<title>Health Quest — IEEE Configuration</title>
+<style>
+  :root{
+    --bg:#f4faf3; --surface:#ffffff; --ink:#15251b; --ink-soft:#52645a;
+    --primary:#2f8f5b; --primary-dark:#1e6b41; --primary-soft:#e3f4e8;
+    --accent:#f59e0b; --accent-soft:#fdf1da; --low:#d64545; --line:#dce9e0;
+    --ieee:#2c57a0; --ieee-soft:#e3ecfb;
+    --radius:16px; --shadow:0 10px 30px rgba(30,80,50,.10);
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--primary-dark)}
+  .wrap{max-width:960px;margin:0 auto;padding:0 18px}
+  header{background:linear-gradient(135deg,#12213e,#2c57a0);color:#fff;padding:44px 0 40px}
+  header .kicker{font-weight:700;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;opacity:.8}
+  header h1{font-size:clamp(1.7rem,4.5vw,2.5rem);line-height:1.1;margin-top:10px;letter-spacing:-.02em}
+  header p.sub{max-width:64ch;margin-top:14px;opacity:.9;font-size:1rem}
+  .cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+  .btn{padding:11px 18px;border-radius:12px;font-weight:700;font-size:.92rem;text-decoration:none;display:inline-block}
+  .btn-white{background:#fff;color:#12213e;box-shadow:0 6px 16px rgba(0,0,0,.15)}
+  .btn-ghostw{background:rgba(255,255,255,.14);color:#fff;border:1.5px solid rgba(255,255,255,.5)}
+  .btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 16px rgba(31,111,72,.28)}
+  .btn-soft{background:var(--primary-soft);color:var(--primary-dark)}
+  main{padding:36px 0 70px}
+  h2{font-size:1.45rem;letter-spacing:-.01em;margin:44px 0 14px;scroll-margin-top:16px}
+  h3{font-size:1.05rem;margin:18px 0 6px}
+  .lead{color:var(--ink-soft);font-size:1rem;max-width:76ch}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
+  .grid{display:grid;gap:14px}
+  .grid.cols2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .grid.cols3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+  .pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:.72rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;background:var(--ieee-soft);color:var(--ieee);border:1px solid #c6d6f2}
+  table{width:100%;border-collapse:collapse;font-size:.87rem;background:var(--surface);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+  th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);background:#f7fbf8}
+  tr:last-child td{border-bottom:none}
+  .table-scroll{overflow-x:auto}
+  code{background:#eef4f0;border:1px solid var(--line);border-radius:6px;padding:2px 7px;font-size:.84em}
+  .banner-note{background:var(--ieee-soft);border-left:4px solid var(--ieee);border-radius:10px;padding:14px 16px;font-size:.9rem}
+  .quote{background:var(--surface);border-left:4px solid var(--ieee);border-radius:10px;padding:16px 18px;font-size:.92rem;color:var(--ink-soft)}
+  footer{background:var(--surface);border-top:1px solid var(--line);padding:28px 0;text-align:center;font-size:.82rem;color:var(--ink-soft)}
+  .step{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+  .step b{font-size:.95rem}
+  .step span{font-size:.84rem;color:var(--ink-soft);display:block}
+  .ieee-logo{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.35);padding:10px 16px;border-radius:12px;font-weight:800;letter-spacing:.04em}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="kicker">Institute of Electrical and Electronics Engineers · alignment brief</div>
+    <h1>IEEE Configuration &amp; Standards</h1>
+    <p class="sub">How Health Quest is built against recognised IEEE standards — ethics, requirements, quality and process — and how a full IEEE-paper submission would be structured. This brief is the deep-dive proof layer behind the live demo.</p>
+    <div class="cta-row" style="align-items:center">
+      <a class="btn btn-white" href="/">▶ Play the game</a>
+      <a class="btn btn-ghostw" href="/explainer">📖 Explainer</a>
+      <a class="btn btn-ghostw" href="/presenter">🎤 Presenter deck</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="banner-note" style="font-size:.95rem">This project is <strong>author-developed, student-owned</strong> open source (MIT License) by <strong>K Subramanya Satyanarayana</strong>, <strong>St. John's English Medium School</strong>, for the PanIIT Andhra Pradesh Summit 2026. It is aligned with, and documented against, the IEEE standards below — not claimed to be certified by IEEE.</div>
+
+  <h2>1 · Standards that map to this project</h2>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>IEEE standard</th><th>What it governs</th><th>Where Health Quest complies</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>IEEE 7000™-2021</strong><br>Ethical Concerns in System Design</td>
+        <td>A model process for addressing ethical concerns during design — the flagship “ethics-by-design” standard.</td>
+        <td>The ethics banner, consent-first location flow, PIN-code alternative, no-timer/no-streak mechanics and the “Why this rating” transparency principle are direct design artifacts of an ethics-first process.</td>
+      </tr>
+      <tr>
+        <td><strong>IEEE 29148™-2018</strong><br>Requirements Engineering</td>
+        <td>Structuring software/system requirements specifications (SRS).</td>
+        <td>This repository's SRS (README) is written as traceable requirement statements; every feature maps to a verifiable acceptance check.</td>
+      </tr>
+      <tr>
+        <td><strong>IEEE 12207™-2017</strong><br>Life-Cycle Processes</td>
+        <td>Standard processes for developing and maintaining software.</td>
+        <td>The project follows a simple, documented lifecycle: requirements → design → implementation (single-file app) → verification (checklist in README) → deployment (Vercel) → operation/maintenance roadmap.</td>
+      </tr>
+      <tr>
+        <td><strong>IEEE 1012™-2016</strong><br>Verification &amp; Validation</td>
+        <td>Asking “did we build the thing right?” and “did we build the right thing?”.</td>
+        <td>README section 8 lists a V&amp;V checklist (every expectation with a pass/fail test); markdown export/import round-trips the food database.</td>
+      </tr>
+      <tr>
+        <td><strong>IEEE 730™-2014</strong><br>Quality Assurance</td>
+        <td>Planning and executing quality assurance for software.</td>
+        <td>The score formula is single-sourced; all 20+ foods reuse the same 5-criteria engine so no value can be hand-tuned inconsistently.</td>
+      </tr>
+      <tr>
+        <td><strong>IEEE 828™-2012</strong><br>Configuration Management</td>
+        <td>Managing versions, baseline and change control.</td>
+        <td>Versioned app (v3.1), food database shipped inside the single file, and markdown import gives a human-readable configuration record.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>2 · Why this matters to a judge (in 60 seconds)</h2>
+  <ol class="lead" style="margin-left:20px">
+    <li><strong>IEEE 7000</strong> is the world's flagship answer to the exact harms this project confronts (Blue Whale, Pokémon Go). Health Quest implements its central idea: address ethical concerns <em>during</em> design, not after.</li>
+    <li><strong>IEEE 29148 + 12207</strong> show the work is engineered, not improvised — requirements are traceable to live features.</li>
+    <li><strong>IEEE 1012 + 730</strong> are proof it was verified — the README checklist doubles as the V&amp;V record.</li>
+    <li>The entire system is <strong>transparent by construction</strong>: every score, every venue rating, and the scoring formula itself is open and auditable.</li>
+  </ol>
+
+  <h2>3 · How the code maps to IEEE 7000 (ethics)</h2>
+  <div class="grid cols2">
+    <div class="card"><b>🧭 Consent-first location</b><p class="muted" style="font-size:.88rem;margin-top:4px"><code>geolocation.getCurrentPosition()</code> is called only after an explicit button tap; the PIN-code path never touches location at all. Location is used once for a radius search and never persisted — compliance with privacy-by-design.</p></div>
+    <div class="card"><b>🧘 No-pressure mechanics</b><p class="muted" style="font-size:.88rem;margin-top:4px">No timers, no streaks, no name-based leaderboards. A “wrong” answer is framed as a lesson. Filtered via the offline/online hint engine that never shames the user.</p></div>
+    <div class="card"><b>🔍 Transparency everywhere</b><p class="muted" style="font-size:.88rem;margin-top:4px">Every food and venue has a “Why this rating” breakdown. The scoring formula is printed on the About page. This is direct application of the Michelin principle, formalised here as IEEE 7000 ethical traceability.</p></div>
+    <div class="card"><b>🔑 BYOK privacy</b><p class="muted" style="font-size:.88rem;margin-top:4px">AI keys are stored in <code>localStorage</code> and sent only to the user's chosen provider. No backend, no accounts, no data collection — the strongest possible privacy posture for a web app.</p></div>
+  </div>
+
+  <h2>4 · IEEE citation format (for the submission paper)</h2>
+  <p class="lead">If this becomes a written paper, the IEEE reference style is numeric. Key sources would be cited as follows:</p>
+  <div class="quote" style="margin-top:12px">
+    <p>[1] K. S. Satyanarayana, “Health Quest: a transparent food-education game for school students,” Project; Social Innovation Ideathon, PanIIT Andhra Pradesh Summit, 2026. [Online]. Available: <code>&lt;your-vercel-url&gt;</code></p>
+    <p style="margin-top:8px">[2] IEEE Std 7000-2021, <em>IEEE Standard Model Process for Addressing Ethical Concerns During System Design</em>, IEEE, 2021. doi: 10.1109/IEEESTD.2021.9536679.</p>
+    <p style="margin-top:8px">[3] IEEE Std 29148-2018, <em>IEEE Standard for Systems and Software Engineering — Life Cycle Processes — Requirements Engineering</em>, IEEE, 2018.</p>
+    <p style="margin-top:8px">[4] IEEE Std 12207-2017, <em>ISO/IEC/IEEE International Standard — Systems and Software Engineering — Software Life Cycle Processes</em>, IEEE, 2017.</p>
+    <p style="margin-top:8px">[5] IEEE Std 1012-2016, <em>IEEE Standard for System, Software, and Hardware Verification and Validation</em>, IEEE, 2016.</p>
+    <p style="margin-top:8px">[6] OpenStreetMap contributors, “OpenStreetMap,” 2026. [Online]. Available: <code>https://www.openstreetmap.org</code></p>
+  </div>
+
+  <h2>5 · Submission configuration cheat-sheet</h2>
+  <div class="grid cols3">
+    <div class="card"><b>📄 Paper format</b><p class="muted" style="font-size:.86rem;margin-top:4px">A4, 1-in margins, 10-pt Times New Roman, single column (student report) or IEEE two-column (conference). Title, author, affiliation, abstract &lt; 250 words, keywords.</p></div>
+    <div class="card"><b>🔖 Keywords</b><p class="muted" style="font-size:.86rem;margin-top:4px">health education; nutrition; transparency; ethics-by-design; web application; OpenStreetMap; privacy; K-12 EdTech.</p></div>
+    <div class="card"><b>🧾 Abstract (sample)</b><p class="muted" style="font-size:.86rem;margin-top:4px">“Health Quest is an offline-first, framework-free web game that teaches school students to identify healthier food through a fully transparent Health Score. Built on IEEE 7000 ethics-by-design, it avoids pressure mechanics, respects location consent, and surfaces real nearby eateries from OpenStreetMap through a serverless proxy. The system costs ₹0 to run and stores no user data.”</p></div>
+  </div>
+
+  <h2>6 · Quick mapping summary (for the poster)</h2>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Standard</th><th>What is satisfies</th><th>Visible proof</th></tr></thead>
+    <tbody>
+      <tr><td>IEEE 7000-2021</td><td>Ethics-by-design</td><td>Safety promise banner · consent-first flow · no timers</td></tr>
+      <tr><td>IEEE 29148-2018</td><td>Requirements</td><td>README checklist as a requirements/SRS record</td></tr>
+      <tr><td>IEEE 12207-2017</td><td>Life-cycle process</td><td>Docs: build → verify → deploy → roadmap</td></tr>
+      <tr><td>IEEE 1012-2016</td><td>Verification &amp; validation</td><td>Post-deploy test checklist, section 8</td></tr>
+      <tr><td>IEEE 730-2014</td><td>Quality assurance</td><td>Single-source scoring engine + round-trip markdown export</td></tr>
+      <tr><td>IEEE 828-2012</td><td>Configuration mgmt</td><td>Versioned single file + importable database format</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="banner-note" style="background:#e8f4ea;border-color:var(--primary)">💬 <strong>Presenter angle:</strong> “Judges often ask, ‘is this engineered or just a script?’ Here is the engineering proof — six IEEE standards map to specific, visible features, and every claim in the demo has a checklist entry behind it. That is exactly the depth our huge submission demonstrates.”</div>
+
+</main>
+
+<footer>
+  <p><strong>Health Quest</strong> · Author: K Subramanya Satyanarayana · St. John's English Medium School</p>
+  <p style="margin-top:4px">MIT License · PanIIT Andhra Pradesh Summit 2026 · <a href="/">Game</a> · <a href="/explainer">Explainer</a> · <a href="/presenter">Presenter deck</a></p>
+</footer>
+
+</body>
+</html>

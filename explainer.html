@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Health Quest — explainer. A transparent, ethical food-education game for school students.">
+<meta name="author" content="K Subramanya Satyanarayana, St. John's English Medium School">
+<title>Health Quest — Project Explainer</title>
+<style>
+  :root{
+    --bg:#f4faf3; --surface:#ffffff; --ink:#15251b; --ink-soft:#52645a;
+    --primary:#2f8f5b; --primary-dark:#1e6b41; --primary-soft:#e3f4e8;
+    --accent:#f59e0b; --accent-soft:#fdf1da; --low:#d64545; --line:#dce9e0;
+    --radius:16px; --shadow:0 10px 30px rgba(30,80,50,.10);
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--font);background:var(--bg);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+  a{color:var(--primary-dark)}
+  .wrap{max-width:960px;margin:0 auto;padding:0 18px}
+  header{
+    background:linear-gradient(135deg,#1e6b41,#3aa569);color:#fff;padding:46px 0 42px;
+  }
+  header .kicker{font-weight:700;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;opacity:.85}
+  header h1{font-size:clamp(1.8rem,4.5vw,2.6rem);line-height:1.1;margin-top:10px;letter-spacing:-.02em}
+  header p.sub{max-width:60ch;margin-top:14px;opacity:.92;font-size:1.02rem}
+  .cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+  .btn{padding:11px 18px;border-radius:12px;font-weight:700;font-size:.92rem;text-decoration:none;display:inline-block;border:none;cursor:pointer}
+  .btn-white{background:#fff;color:var(--primary-dark);box-shadow:0 6px 16px rgba(0,0,0,.15)}
+  .btn-ghostw{background:rgba(255,255,255,.14);color:#fff;border:1.5px solid rgba(255,255,255,.5)}
+  .btn-primary{background:var(--primary);color:#fff;box-shadow:0 6px 16px rgba(31,111,72,.28)}
+  .btn-soft{background:var(--primary-soft);color:var(--primary-dark)}
+  .btn-ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink)}
+  main{padding:38px 0 70px}
+  h2{font-size:1.5rem;letter-spacing:-.01em;margin:44px 0 14px;scroll-margin-top:20px}
+  h3{font-size:1.05rem;margin:18px 0 6px}
+  .lead{color:var(--ink-soft);font-size:1rem;max-width:74ch}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
+  .grid{display:grid;gap:14px}
+  .grid.cols2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .grid.cols3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .pill{display:inline-block;padding:4px 12px;border-radius:999px;font-size:.73rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;background:var(--primary-soft);color:var(--primary-dark)}
+  .pill.amber{background:var(--accent-soft);color:#96650c}
+  .pill.red{background:#fdeaea;color:#a83232}
+  .pill.blue{background:#e3ecfb;color:#2c57a0}
+  .scale-row{display:grid;grid-template-columns:170px 1fr 56px;gap:10px;align-items:center;margin:9px 0}
+  .scale-row .label{font-size:.8rem;font-weight:600;color:var(--ink-soft)}
+  .scale-row .val{font-weight:800;font-size:.82rem;text-align:right}
+  .bar{height:10px;border-radius:999px;background:#e8efe9;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:999px;background:var(--primary);width:0;transition:width .8s ease}
+  .bar.show i{width:calc(var(--w)*1%)}
+  table{width:100%;border-collapse:collapse;font-size:.88rem;background:var(--surface);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+  th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);background:#f7fbf8}
+  tr:last-child td{border-bottom:none}
+  .table-scroll{overflow-x:auto}
+  .tagline{font-size:1.25rem;font-weight:800;text-align:center;color:var(--primary-dark);padding:26px 18px;background:var(--primary-soft);border-radius:var(--radius);margin:26px 0}
+  .step{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+  .step .n{width:30px;height:30px;flex:none;border-radius:10px;background:var(--primary-soft);color:var(--primary-dark);display:grid;place-items:center;font-weight:800}
+  .step b{font-size:.95rem}
+  .step span{font-size:.84rem;color:var(--ink-soft);display:block}
+  .banner-note{background:var(--accent-soft);border-left:4px solid var(--accent);border-radius:10px;padding:14px 16px;font-size:.9rem}
+  footer{background:var(--surface);border-top:1px solid var(--line);padding:28px 0;text-align:center;font-size:.82rem;color:var(--ink-soft)}
+  .nav{position:sticky;top:0;z-index:20;background:rgba(244,250,243,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .nav-inner{max-width:960px;margin:0 auto;padding:10px 18px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .nav a{text-decoration:none;font-weight:600;font-size:.84rem;padding:7px 12px;border-radius:999px;color:var(--ink-soft)}
+  .nav a:hover{background:var(--primary-soft);color:var(--primary-dark)}
+  .nav .right{margin-left:auto}
+  .nav .right a{background:var(--primary);color:#fff}
+  code{background:#eef4f0;border:1px solid var(--line);border-radius:6px;padding:2px 7px;font-size:.84em}
+  .muted{color:var(--ink-soft)}
+  .verify{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="kicker">PanIIT Andhra Pradesh Summit · 2026 · Social Innovation Ideathon</div>
+    <h1>Health Quest</h1>
+    <p class="sub">An ethical, transparent food-education game that helps school students (Classes 8–12) learn to identify the healthiest food — with a visible <strong>Health Score</strong> and real nearby eatery ratings, built on zero-cost, privacy-first technology.</p>
+    <div class="cta-row">
+      <a class="btn btn-white" href="/">▶ Play the game</a>
+      <a class="btn btn-ghostw" href="/presenter">🎤 Presenter deck</a>
+      <a class="btn btn-ghostw" href="/ieee">⚙️ IEEE configuration</a>
+    </div>
+  </div>
+</header>
+
+<div class="nav">
+  <div class="nav-inner">
+    <a href="#problem">Problem</a>
+    <a href="#solution">Solution</a>
+    <a href="#score">Health Score</a>
+    <a href="#local">Locate Nearby</a>
+    <a href="#ethics">Ethics</a>
+    <a href="#stack">Tech stack</a>
+    <a href="#privacy">Privacy</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#credits">Credits</a>
+    <span class="right"><a href="/ieee">IEEE details →</a></span>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <div class="tagline">“Health Quest is a static, offline-first web app. No backend, no database, no tracking. Users bring their own AI keys. The whole thing costs ₹0 to run — forever.”</div>
+
+  <h2 id="problem">1 · The problem</h2>
+  <p class="lead">School students face a flood of diet misinformation on social media. Food content is full of fear, fads and hidden ads. Meanwhile, food apps rank restaurants with black-box scores nobody can verify. Kids need to learn <strong>how to judge food themselves</strong> — not just obey a score.</p>
+
+  <div class="grid cols3" style="margin-top:16px">
+    <div class="card"><span style="font-size:1.6rem">📱</span><h3>Misinformation</h3><p class="muted" style="font-size:.88rem">Viral diet myths travel faster than facts. Nobody teaches kids how to verify nutrition claims.</p></div>
+    <div class="card"><span style="font-size:1.6rem">🔢</span><h3>Black-box ratings</h3><p class="muted" style="font-size:.88rem">Big food apps never reveal <em>why</em> a place scored well — you must simply trust it.</p></div>
+    <div class="card"><span style="font-size:1.6rem">😰</span><h3>Fear-based learning</h3><p class="muted" style="font-size:.88rem">Most “diet” apps use timers, streaks and guilt. For vulnerable students, that pressure backfires.</p></div>
+  </div>
+
+  <h2 id="solution">2 · The solution</h2>
+  <div class="steps" style="display:grid;gap:10px;margin-top:8px">
+    <div class="step"><div class="n">1</div><div><b>Pick a cuisine level</b><span>South Indian, North Indian, Indian favourites or International — 20+ foods.</span></div></div>
+    <div class="step"><div class="n">2</div><div><b>Compare two foods</b><span>Choose the healthier one. No timer, no streak, no penalty.</span></div></div>
+    <div class="step"><div class="n">3</div><div><b>Read the “why”</b><span>Every answer opens a transparent score card explaining each point.</span></div></div>
+    <div class="step"><div class="n">4</div><div><b>Locate nearby</b><span>Enter a PIN code and see real eateries within 2 km, rated on visible criteria.</span></div></div>
+  </div>
+
+  <h2 id="score">3 · The transparent Health Score</h2>
+  <p class="lead">Inspired by the Michelin Guide, which earns trust by publishing its criteria. Every food gets a score <strong>out of 100</strong> built from 5 honest criteria — and a “Why this rating” button on everything.</p>
+
+  <div class="card" style="margin-top:16px">
+    <div class="scale-row" style="--w:100"><span class="label">🧬 Nutrition</span><div class="bar"><i></i></div><span class="val">30 pts</span></div>
+    <div class="scale-row" style="--w:83"><span class="label">🌾 Whole-food factor</span><div class="bar"><i></i></div><span class="val">25 pts</span></div>
+    <div class="scale-row" style="--w:67"><span class="label">🧂 Sugar &amp; salt</span><div class="bar"><i></i></div><span class="val">20 pts</span></div>
+    <div class="scale-row" style="--w:50"><span class="label">🥑 Healthy fats</span><div class="bar"><i></i></div><span class="val">15 pts</span></div>
+    <div class="scale-row" style="--w:33"><span class="label">⚖️ Balance &amp; portion</span><div class="bar"><i></i></div><span class="val">10 pts</span></div>
+  </div>
+
+  <h3>Example food scores</h3>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Food</th><th>Category</th><th>Health Score</th><th>Why (1 line)</th></tr></thead>
+    <tbody>
+      <tr><td>🫓 Idli + sambar</td><td><span class="pill">Everyday</span></td><td><strong>82/100</strong></td><td>Steamed + fermented + lentil protein, low oil.</td></tr>
+      <tr><td>🍛 Dal + roti + sabzi</td><td><span class="pill">Everyday</span></td><td><strong>85/100</strong></td><td>The balanced plant-protein plate.</td></tr>
+      <tr><td>🥞 Masala dosa</td><td><span class="pill amber">Sometimes</span></td><td><strong>64/100</strong></td><td>Fermented, but potato–ghee filling adds oil.</td></tr>
+      <tr><td>🍕 Veggie pizza</td><td><span class="pill amber">Sometimes</span></td><td><strong>58/100</strong></td><td>Thin crust + veg can be OK; cheese &amp; crust sink it.</td></tr>
+      <tr><td>🥟 Samosa</td><td><span class="pill red">Treat</span></td><td><strong>42/100</strong></td><td>Fried maida shell soaked in oil.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="local">4 · Locate Nearby — real data, honest rating</h2>
+  <p class="lead">The app fetches <strong>real eateries from OpenStreetMap</strong> within 2 km of the user's PIN code (or a safe one-time location lookup). Each venue gets a rating from 100 on 4 transparent criteria — and every rating can be opened to see its own breakdown.</p>
+
+  <div class="card" style="margin-top:16px">
+    <div class="scale-row" style="--w:100"><span class="label">🍽️ Eatery type</span><div class="bar"><i></i></div><span class="val">20 pts</span></div>
+    <div class="scale-row" style="--w:100"><span class="label">🚶 Near-enough</span><div class="bar"><i></i></div><span class="val">30 pts</span></div>
+    <div class="scale-row" style="--w:100"><span class="label">🥬 Healthful options</span><div class="bar"><i></i></div><span class="val">20 pts</span></div>
+    <div class="scale-row" style="--w:100"><span class="label">🗓️ Honest info</span><div class="bar"><i></i></div><span class="val">30 pts</span></div>
+  </div>
+
+  <div class="banner-note" style="margin-top:14px">⚠️ <strong>Judges, please verify:</strong> enter any real Indian PIN code and the app will show living, breathing eateries with hours and phone numbers from OpenStreetMap — not sample data.</div>
+
+  <h2 id="ethics">5 · Safety by design (the ethics layer)</h2>
+  <p class="lead">Health Quest was designed after studying three case studies, and every lesson maps to a concrete design choice.</p>
+  <div class="table-scroll" style="margin-top:12px">
+  <table>
+    <thead><tr><th>Case study</th><th>What we learned</th><th>How Health Quest applies it</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Pokémon Go</strong></td><td>Location features can cause real-world harm.</td><td>Consent-first flow, no silent tracking, PIN-code alternative.</td></tr>
+      <tr><td><strong>Blue Whale challenge</strong></td><td>Manipulative mechanics harm vulnerable kids.</td><td>No timers, no streaks, no “you must go”.</td></tr>
+      <tr><td><strong>Michelin Guide</strong></td><td>Trust comes from transparent criteria.</td><td>Visible score breakdown + “Why this rating” button.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="stack">6 · Technology (all free)</h2>
+  <div class="grid cols2">
+    <div class="card"><b>🌐 Frontend</b><p class="muted" style="font-size:.88rem;margin-top:4px">Single HTML file · vanilla JavaScript · no framework · works offline from a plain file.</p></div>
+    <div class="card"><b>🗺️ Data</b><p class="muted" style="font-size:.88rem;margin-top:4px">Local food database + OpenStreetMap Overpass API via a serverless proxy.</p></div>
+    <div class="card"><b>🤖 AI hints (optional)</b><p class="muted" style="font-size:.88rem;margin-top:4px">OpenRouter → NVIDIA NIM → offline fallback. Bring Your Own Key, stored in <code>localStorage</code>.</p></div>
+    <div class="card"><b>☁️ Hosting</b><p class="muted" style="font-size:.88rem;margin-top:4px">Netlify or Vercel free tier with a 20-line serverless function.</p></div>
+    <div class="card"><b>🏷️ License</b><p class="muted" style="font-size:.88rem;margin-top:4px"><strong>MIT License</strong> · K Subramanya Satyanarayana · St. John's English Medium School.</p></div>
+    <div class="card"><b>⚙️ IEEE</b><p class="muted" style="font-size:.88rem;margin-top:4px">Aligned with IEEE 7000 (ethics in design) and IEEE 2651xx. See the <a href="/ieee">IEEE configuration page →</a></p></div>
+  </div>
+
+  <h2 id="privacy">7 · Privacy promise</h2>
+  <div class="verify card">
+    <span style="font-size:2rem">🔒</span>
+    <div>
+      <p>No API keys in the HTML (BYOK only). No backend database. No user tracking, no analytics, no cookies. Location used once and never stored. Keys live in <code>localStorage</code> and vanish when browser data is cleared.</p>
+    </div>
+  </div>
+
+  <h2 id="roadmap">8 · Roadmap</h2>
+  <div class="table-scroll">
+  <table>
+    <thead><tr><th>Idea</th><th>Effort</th><th>Benefit</th></tr></thead>
+    <tbody>
+      <tr><td>Telugu translation</td><td><span class="pill amber">Low</span></td><td>Local relevance for Andhra Pradesh.</td></tr>
+      <tr><td>Offline PWA (service worker)</td><td><span class="pill amber">Medium</span></td><td>Works with no internet after first load.</td></tr>
+      <tr><td>Favourite eateries (localStorage)</td><td><span class="pill">Low</span></td><td>Personal, private, zero backend.</td></tr>
+      <tr><td>“Report outdated info”</td><td><span class="pill amber">Medium</span></td><td>Crowd-verified data quality.</td></tr>
+      <tr><td>School-level leaderboard (no names)</td><td><span class="pill amber">Medium</span></td><td>Light competition, zero pressure.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2 id="credits">9 · Credits &amp; open data</h2>
+  <ul style="margin-left:20px;color:var(--ink-soft);font-size:.92rem">
+    <li>OpenStreetMap + Overpass API — free, open geodata</li>
+    <li>Nominatim — free PIN-code geocoding</li>
+    <li>OpenRouter + NVIDIA NIM — free AI tiers</li>
+    <li>Netlify / Vercel — free static hosting with serverless functions</li>
+    <li>Case-study inspiration — Pokémon Go, Blue Whale challenge, Michelin Guide</li>
+  </ul>
+
+</main>
+
+<footer>
+  <p><strong>Health Quest</strong> · Author: K Subramanya Satyanarayana · St. John's English Medium School</p>
+  <p style="margin-top:4px">MIT License · PanIIT Andhra Pradesh Summit 2026 · <a href="/ieee">IEEE configuration</a> · <a href="/presenter">Presenter deck</a></p>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
+  }, { threshold: 0.2 });
+  document.querySelectorAll('.bar').forEach(b => io.observe(b));
+</script>
+</body>
+</html>

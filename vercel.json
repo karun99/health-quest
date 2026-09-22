@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "name": "health-quest",
+  "rewrites": [
+    { "source": "/", "destination": "/health-quest.html" },
+    { "source": "/explainer", "destination": "/explainer.html" },
+    { "source": "/presenter", "destination": "/presenter.html" },
+    { "source": "/ieee", "destination": "/explainer-ieee.html" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ]
+}
