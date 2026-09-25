@@ -19,6 +19,25 @@
 
 ---
 
+## Statement of need
+
+School students are taught to read nutrition labels, but the food games they
+actually play copy manipulative mobile mechanics (streak pressure, timers,
+silent location tracking) and present scores as opaque numbers with no
+auditable derivation. Health Quest addresses both gaps: the transparent
+Michelin-style Health Score shows the exact criteria behind every rating, the
+consent-first "Locate Nearby" flow prevents location-based harm, and the
+entire design is mapped to IEEE 7000 (ethics by design) and IEEE 29148
+(requirements engineering) so the safety argument is versioned with the code.
+
+## AI usage disclosure
+
+Code and documentation were drafted with generative-AI assistance and reviewed
+by the human maintainers, who made the design decisions. This disclosure is
+kept in line with the JOSS AI usage policy.
+
+---
+
 ## 1. Project Summary
 
 Health Quest is an educational web game that helps school students (Classes 8–12) learn to identify the healthiest food. Every answer explains why using a transparent, Michelin-style Health Score. A "Locate Nearby" feature shows real eateries from OpenStreetMap with a visible, criteria-based rating.

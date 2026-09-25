@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Health Quest"
+abstract: "Ethics-first food-literacy game for school students with a transparent Michelin-style Health Score, consent-first OpenStreetMap eatery lookup, and IEEE standards alignment. Single-file, dependency-free web app."
+authors:
+  - family-names: Nandipati
+    given-names: Sai Karun
+    orcid: https://orcid.org/0009-0007-9218-9750
+    affiliation: "Department of Data Science and Artificial Intelligence, PB Siddhartha College of Arts and Science"
+  - family-names: Satyanarayana
+    given-names: K Subramanya
+    affiliation: "St. John's English Medium School"
+keywords:
+  - education
+  - food literacy
+  - health score
+  - gamification
+  - ethics
+license: MIT
+date-released: "2026-09-25"
+version: "3.1.0"
+repository-code: "https://github.com/karun99/health-quest"
