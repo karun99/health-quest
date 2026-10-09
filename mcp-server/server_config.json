@@ -1,0 +1,17 @@
+{
+  "app": {
+    "name": "health-quest",
+    "version": "unknown",
+    "description": "Health Quest v3.1 \u2014 ethics-first food education game (transparent Health Score + real OSM eateries) for PanIIT AP Ideathon 2026"
+  },
+  "stack": "python",
+  "routes": [],
+  "pages": [],
+  "base_url": "http://localhost:8000",
+  "module": "health_quest",
+  "scripts": {},
+  "cli_entry": null,
+  "server": "mcp-server/mcp_server.py",
+  "runner": "python",
+  "runner_cmd": "python3"
+}
