@@ -405,3 +405,15 @@ This starts a local server with the function running, so CORS is solved even loc
 ---
 
 *End of document. Hand to Ideathon judges as the SRS / technical reference, or include in your GitHub repo.*
+
+## MCP Server
+
+This repository ships a dependency-free [Model Context Protocol](https://modelcontextprotocol.io)
+stdio server so assistants, agents and [glama.ai](https://glama.ai) can inspect the project.
+
+```bash
+python3 mcp_server.py
+```
+
+Tools: `repo_info`, `list_files`, `read_file`, `search`, `health`. Standard library only — no
+installation or dependencies required. Listing metadata is declared in [`glama.json`](glama.json).
